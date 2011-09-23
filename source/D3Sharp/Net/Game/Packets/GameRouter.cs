@@ -21,11 +21,481 @@ using System.IO;
 using System.Linq;
 using D3Sharp.Utils;
 using D3Sharp.Utils.Extensions;
+using System.Collections.Generic;
 
 namespace D3Sharp.Net.Game.Packets
 {
     public static class GameRouter
     {
+        #region GetMessageType
+        static Type GetMessageType(int id)
+        {
+            switch (id)
+            {
+                case 47:
+                    return typeof(GameSetupMessage);
+                case 46:
+                    return typeof(ConnectionEstablishedMessage);
+                case 3:
+                    return typeof(QuitGameMessage);
+                case 6:
+                case 83:
+                case 84:
+                case 85:
+                case 86:
+                case 137:
+                case 200:
+                case 288:
+                case 289:
+                case 290:
+                case 291:
+                    return typeof(DWordDataMessage);
+                case 292:
+                    return typeof(BroadcastTextMessage);
+                case 14:
+                case 28:
+                case 29:
+                case 30:
+                case 31:
+                case 50:
+                case 150:
+                case 234:
+                case 235:
+                case 236:
+                case 237:
+                case 238:
+                case 239:
+                    return typeof(GenericBlobMessage);
+                case 18:
+                    return typeof(UInt64DataMessage);
+                case 13:
+                    return typeof(VersionsMessage);
+                case 42:
+                case 43:
+                case 162:
+                case 164:
+                case 251:
+                case 285:
+                    return typeof(PlayerIndexMessage);
+                case 49:
+                    return typeof(NewPlayerMessage);
+                case 51:
+                    return typeof(EnterWorldMessage);
+                case 55:
+                    return typeof(RevealWorldMessage);
+                case 52:
+                    return typeof(RevealSceneMessage);
+                case 53:
+                    return typeof(DestroySceneMessage);
+                case 54:
+                    return typeof(SwapSceneMessage);
+                case 56:
+                    return typeof(RevealTeamMessage);
+                case 58:
+                    return typeof(HeroStateMessage);
+                case 59:
+                    return typeof(ACDEnterKnownMessage);
+                case 32:
+                case 34:
+                case 35:
+                case 36:
+                case 37:
+                case 60:
+                case 62:
+                case 67:
+                case 89:
+                case 95:
+                case 96:
+                case 105:
+                case 109:
+                case 132:
+                case 133:
+                case 134:
+                case 144:
+                case 145:
+                case 153:
+                case 156:
+                case 173:
+                case 174:
+                case 196:
+                case 197:
+                case 202:
+                case 203:
+                case 228:
+                case 240:
+                case 263:
+                case 266:
+                case 274:
+                case 275:
+                case 296:
+                    return typeof(ANNDataMessage);
+                case 61:
+                    return typeof(PlayerEnterKnownMessage);
+                case 63:
+                    return typeof(ACDWorldPositionMessage);
+                case 64:
+                    return typeof(ACDInventoryPositionMessage);
+                case 65:
+                    return typeof(ACDInventoryUpdateActorSNO);
+                case 57:
+                    return typeof(PlayerActorSetInitialMessage);
+                case 78:
+                    return typeof(VisualInventoryMessage);
+                case 136:
+                    return typeof(ACDChangeGBHandleMessage);
+                case 72:
+                    return typeof(AffixMessage);
+                case 138:
+                    return typeof(LearnedSkillMessage);
+                case 75:
+                    return typeof(PortalSpecifierMessage);
+                case 73:
+                    return typeof(RareMonsterNamesMessage);
+                case 74:
+                    return typeof(RareItemNameMessage);
+                case 76:
+                    return typeof(AttributeSetValueMessage);
+                case 79:
+                    return typeof(ProjectileStickMessage);
+                case 77:
+                    return typeof(AttributesSetValuesMessage);
+                case 88:
+                case 231:
+                    return typeof(ChatMessage);
+                case 178:
+                    return typeof(VictimMessage);
+                case 179:
+                    return typeof(KillCountMessage);
+                case 108:
+                    return typeof(PlayAnimationMessage);
+                case 110:
+                case 120:
+                    return typeof(ACDTranslateNormalMessage);
+                case 111:
+                    return typeof(ACDTranslateSnappedMessage);
+                case 112:
+                case 121:
+                    return typeof(ACDTranslateFacingMessage);
+                case 113:
+                    return typeof(ACDTranslateFixedMessage);
+                case 114:
+                    return typeof(ACDTranslateArcMessage);
+                case 115:
+                    return typeof(ACDTranslateDetPathMessage);
+                case 116:
+                    return typeof(ACDTranslateDetPathSinMessage);
+                case 117:
+                    return typeof(ACDTranslateDetPathSpiralMessage);
+                case 118:
+                    return typeof(ACDTranslateSyncMessage);
+                case 119:
+                    return typeof(ACDTranslateFixedUpdateMessage);
+                case 166:
+                    return typeof(ACDCollFlagsMessage);
+                case 167:
+                    return typeof(GoldModifiedMessage);
+                case 122:
+                    return typeof(PlayEffectMessage);
+                case 123:
+                    return typeof(PlayHitEffectMessage);
+                case 124:
+                    return typeof(PlayHitEffectOverrideMessage);
+                case 125:
+                    return typeof(PlayNonPositionalSoundMessage);
+                case 126:
+                    return typeof(PlayErrorSoundMessage);
+                case 127:
+                    return typeof(PlayMusicMessage);
+                case 128:
+                    return typeof(PlayCutsceneMessage);
+                case 130:
+                    return typeof(FlippyMessage);
+                case 143:
+                    return typeof(NPCInteractOptionsMessage);
+                case 155:
+                    return typeof(PetMessage);
+                case 157:
+                    return typeof(HirelingInfoUpdateMessage);
+                case 147:
+                    return typeof(QuestUpdateMessage);
+                case 148:
+                    return typeof(QuestMeterMessage);
+                case 149:
+                    return typeof(QuestCounterMessage);
+                case 152:
+                    return typeof(PlayerLevel);
+                case 131:
+                    return typeof(WaypointActivatedMessage);
+                case 135:
+                    return typeof(AimTargetMessage);
+                case 165:
+                    return typeof(SetIdleAnimationMessage);
+                case 154:
+                    return typeof(ACDPickupFailedMessage);
+                case 66:
+                    return typeof(TrickleMessage);
+                case 68:
+                    return typeof(MapRevealSceneMessage);
+                case 69:
+                    return typeof(SavePointInfoMessage);
+                case 70:
+                    return typeof(HearthPortalInfoMessage);
+                case 71:
+                    return typeof(ReturnPointInfoMessage);
+                case 139:
+                case 140:
+                    return typeof(DataIDDataMessage);
+                case 151:
+                    return typeof(PlayerInteractMessage);
+                case 160:
+                case 161:
+                    return typeof(TradeMessage);
+                case 168:
+                    return typeof(ActTransitionMessage);
+                case 169:
+                    return typeof(InterstitialMessage);
+                case 171:
+                    return typeof(RopeEffectMessageACDToACD);
+                case 172:
+                    return typeof(RopeEffectMessageACDToPlace);
+                case 158:
+                    return typeof(UIElementMessage);
+                case 176:
+                    return typeof(ACDChangeActorMessage);
+                case 177:
+                    return typeof(PlayerWarpedMessage);
+                case 175:
+                    return typeof(GameSyncedDataMessage);
+                case 141:
+                    return typeof(EndOfTickMessage);
+                case 4:
+                    return typeof(CreateBNetGameMessage);
+                case 5:
+                    return typeof(CreateBNetGameResultMessage);
+                case 8:
+                    return typeof(RequestJoinBNetGameMessage);
+                case 9:
+                    return typeof(BNetJoinGameRequestResultMessage);
+                case 10:
+                    return typeof(JoinBNetGameMessage);
+                case 11:
+                    return typeof(JoinLANGameMessage);
+                case 15:
+                    return typeof(NetworkAddressMessage);
+                case 17:
+                    return typeof(GameIdMessage);
+                case 20:
+                case 107:
+                case 188:
+                case 199:
+                case 219:
+                case 268:
+                case 276:
+                case 277:
+                    return typeof(IntDataMessage);
+                case 22:
+                    return typeof(EntityIdMessage);
+                case 23:
+                    return typeof(CreateHeroMessage);
+                case 24:
+                    return typeof(CreateHeroResultMessage);
+                case 26:
+                    return typeof(BlizzconCVarsMessage);
+                case 38:
+                case 41:
+                    return typeof(LogoutContextMessage);
+                case 39:
+                    return typeof(LogoutTickTimeMessage);
+                case 80:
+                    return typeof(TargetMessage);
+                case 81:
+                    return typeof(SecondaryAnimationPowerMessage);
+                case 82:
+                case 191:
+                case 192:
+                case 221:
+                case 282:
+                case 295:
+                case 300:
+                    return typeof(SNODataMessage);
+                case 1:
+                case 2:
+                    return typeof(TryConsoleCommand);
+                case 87:
+                    return typeof(TryChatMessage);
+                case 142:
+                    return typeof(TryWaypointMessage);
+                case 90:
+                case 92:
+                    return typeof(InventoryRequestMoveMessage);
+                case 93:
+                    return typeof(InventorySplitStackMessage);
+                case 94:
+                    return typeof(InventoryStackTransferMessage);
+                case 91:
+                    return typeof(InventoryRequestSocketMessage);
+                case 97:
+                    return typeof(InventoryRequestUseMessage);
+                case 98:
+                    return typeof(SocketSpellMessage);
+                case 99:
+                    return typeof(HelperDetachMessage);
+                case 100:
+                case 101:
+                case 102:
+                case 103:
+                    return typeof(AssignSkillMessage);
+                case 104:
+                    return typeof(HirelingRequestLearnSkillMessage);
+                case 106:
+                    return typeof(PlayerChangeHotbarButtonMessage);
+                case 180:
+                    return typeof(WorldStatusMessage);
+                case 181:
+                    return typeof(WeatherOverrideMessage);
+                case 129:
+                    return typeof(ComplexEffectAddMessage);
+                case 170:
+                    return typeof(EffectGroupACDToACDMessage);
+                case 183:
+                    return typeof(ACDShearMessage);
+                case 184:
+                    return typeof(ACDGroupMessage);
+                case 186:
+                    return typeof(PlayConvLineMessage);
+                case 187:
+                    return typeof(StopConvLineMessage);
+                case 190:
+                    return typeof(EndConversationMessage);
+                case 193:
+                    return typeof(HirelingSwapMessage);
+                case 195:
+                    return typeof(DeathFadeTimeMessage);
+                case 198:
+                    return typeof(DisplayGameTextMessage);
+                case 201:
+                case 270:
+                    return typeof(GBIDDataMessage);
+                case 204:
+                    return typeof(ACDLookAtMessage);
+                case 205:
+                    return typeof(KillCounterUpdateMessage);
+                case 206:
+                    return typeof(LowHealthCombatMessage);
+                case 207:
+                    return typeof(SaviorMessage);
+                case 208:
+                    return typeof(FloatingNumberMessage);
+                case 209:
+                    return typeof(FloatingAmountMessage);
+                case 210:
+                    return typeof(RemoveRagdollMessage);
+                case 211:
+                    return typeof(SNONameDataMessage);
+                case 212:
+                case 213:
+                    return typeof(LoreMessage);
+                case 217:
+                    return typeof(WorldDeletedMessage);
+                case 220:
+                    return typeof(TimedEventStartedMessage);
+                case 222:
+                    return typeof(ActTransitionStartedMessage);
+                case 225:
+                case 226:
+                    return typeof(PlayerQuestMessage);
+                case 227:
+                    return typeof(PlayerDeSyncSnapMessage);
+                case 229:
+                    return typeof(SalvageResultsMessage);
+                case 233:
+                    return typeof(MapMarkerInfoMessage);
+                case 241:
+                    return typeof(DebugActorTooltipMessage);
+                case 242:
+                case 245:
+                    return typeof(BossEncounterMessage);
+                case 248:
+                    return typeof(EncounterInviteStateMessage);
+                case 159:
+                case 260:
+                    return typeof(BoolDataMessage);
+                case 256:
+                    return typeof(CameraFocusMessage);
+                case 257:
+                    return typeof(CameraZoomMessage);
+                case 258:
+                    return typeof(CameraYawMessage);
+                case 261:
+                    return typeof(BossZoomMessage);
+                case 262:
+                    return typeof(EnchantItemMessage);
+                case 271:
+                    return typeof(CraftingResultsMessage);
+                case 269:
+                    return typeof(DebugDrawPrimMessage);
+                case 272:
+                    return typeof(CrafterLevelUpMessage);
+                case 280:
+                    return typeof(GameTestingSamplingStartMessage);
+                case 283:
+                    return typeof(RequestBuffCancelMessage);
+                case 25:
+                case 27:
+                case 33:
+                case 40:
+                case 44:
+                case 45:
+                case 48:
+                case 146:
+                case 163:
+                case 182:
+                case 185:
+                case 189:
+                case 194:
+                case 216:
+                case 218:
+                case 223:
+                case 224:
+                case 230:
+                case 232:
+                case 243:
+                case 244:
+                case 246:
+                case 247:
+                case 249:
+                case 250:
+                case 252:
+                case 253:
+                case 254:
+                case 255:
+                case 259:
+                case 264:
+                case 265:
+                case 267:
+                case 273:
+                case 278:
+                case 279:
+                case 281:
+                case 284:
+                case 286:
+                case 287:
+                case 293:
+                case 294:
+                case 297:
+                case 298:
+                case 299:
+                case 301:
+                    return typeof(SimpleMessage);
+                default:
+                    return typeof(Object);
+            }
+        }
+        #endregion
+
+        public static Dictionary<Type, Action<GameMessage, GameBitBuffer, IConnection>> gameMessages;
+        public const int ImplementedProtocolHash = 0x21EEE08D;
+
         private static readonly Logger Logger = LogManager.CreateLogger();
         public static void Route(ConnectionDataEventArgs e)
         {
@@ -35,194 +505,13891 @@ namespace D3Sharp.Net.Game.Packets
 
         public static void Identify(IConnection connection, MemoryStream stream)
         {
+            //We Should move this part to a more central position
+            if (gameMessages == null)
+            {
+                gameMessages = new Dictionary<Type, Action<GameMessage, GameBitBuffer, IConnection>>();
+                gameMessages.Add(typeof(JoinBNetGameMessage), JoinBNetGameMessage);
+                gameMessages.Add(typeof(SimpleMessage), SimpleMessage);
+            }
+            //
+
+            GameBitBuffer _incomingBuffer = new GameBitBuffer(512);
+            GameBitBuffer _outgoingBuffer = new GameBitBuffer(ushort.MaxValue);
+
+            _outgoingBuffer.WriteInt(32, 0);
+
             var header = new GameHeader(stream);
             var payload = new byte[header.Length - 6];
-            
+
             stream.Read(payload, 0, (int)header.Length - 6);
-            
-            var packet = new GamePacket(header, payload);
 
-            //Logger.Debug("C->S: {0}", packet.ToString());
+            _incomingBuffer.AppendData(header.Data);
+            _incomingBuffer.AppendData(payload);
 
-            switch (header.opCode)
+            while (_incomingBuffer.IsPacketAvailable())
             {
-                case 0x05: //Response = 06, 17
-                    WelcomeClient(connection, packet);
-                    Logger.Debug("WelcomeClient opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x10: //no payload
-                    Logger.Debug("NoPayload opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x12:
-                    Logger.Debug("UnNamed opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x13: //Logout
-                    StartLogout(connection, packet);
-                    Logger.Debug("Logout opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x14: //Cancel Logout
-                    CancelLogout(connection, packet);
-                    Logger.Debug("Cancel opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x18:  //Reponse = 4E, 21
-                    SendToonApperanceData(connection, packet);
-                    Logger.Debug("Response opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x28: //Ability/Interaction
-                    Logger.Debug("Interaction opCode [0x{0}]", header.opCode.ToString("x2"));
-                    Logger.Debug("Interaction payload [{0}]", payload.HexDump());
-                    break;
-                case 0x2D:  //Manipulate Inventory
-                    SendInventoryUpdate(connection, packet);
-                    Logger.Debug("Manipulate Inventory opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x35:  // Update / Add To Sash/Belt
-                    Logger.Debug("UpdateSash opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x3C:  //Position Update
-                    Logger.Debug("PositionUpdate opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x47:
-                    Logger.Debug("UnNamed opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x4F: //no payload
-                    Logger.Debug("NoPayLoad opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x5C: //no payload heartbeat
-                    Logger.Debug("NoPayLoad Heartbeat opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x90: //payload - 4 bytes
-                    Logger.Debug("Payload 4bytes opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
-                case 0x92: //no payload, response = 26
-                    //server sends 0x91
-                    //client responds with 0x92
-                    //server responds with 0x26
-                    Logger.Debug("UnNamed opCode [0x{0}]", header.opCode.ToString("x2"));
+                int end = _incomingBuffer.Position;
+                end += _incomingBuffer.ReadInt(32) * 8;
+
+                while ((end - _incomingBuffer.Position) >= 9)
+                {
+                    GameMessage msg = _incomingBuffer.ParseMessage();
+
+                    Logger.LogIncoming(msg);
+                    try
+                    {
+                        if (gameMessages.ContainsKey(GetMessageType(msg.Id)))
+                            gameMessages[GetMessageType(msg.Id)](msg, _outgoingBuffer, connection);
+                        else
+                            Logger.Debug("Unhandled game message: 0x{0:X4} {1}", msg.Id, msg.GetType().Name);
+                    }
+                    catch (NotImplementedException)
+                    {
+                        Logger.Debug("Unhandled game message: 0x{0:X4} {1}", msg.Id, msg.GetType().Name);
+                    }
+                }
+
+                _incomingBuffer.Position = end;
+            }
+        }
+
+        public static void SendMessage(GameMessage msg, GameBitBuffer buffer)
+        {
+            buffer.EncodeMessage(msg);
+        }
+
+        public static void FlushOutgoingBuffer(GameBitBuffer buffer, IConnection connection)
+        {
+            if (buffer.Length > 32)
+            {
+                var data = buffer.GetPacketAndReset();
+                connection.Send(data);
+            }
+        }
+
+        public static void JoinBNetGameMessage(GameMessage _msg, GameBitBuffer buffer, IConnection connection)
+        {
+            var msg = (JoinBNetGameMessage)_msg;
+
+            if (msg.Id != 0x000A)
+                throw new NotImplementedException();
+
+            SendMessage(new VersionsMessage()
+            {
+                Id = 0x000D,
+                SNOPackHash = msg.SNOPackHash,
+                ProtocolHash = GameRouter.ImplementedProtocolHash,
+                Version = "0.3.0.7333",
+            }, buffer);
+            FlushOutgoingBuffer(buffer, connection);
+
+            SendMessage(new ConnectionEstablishedMessage()
+            {
+                Id = 0x002E,
+                Field0 = 0x00000000,
+                Field1 = 0x4BB91A16,
+                Field2 = msg.SNOPackHash,
+            }, buffer);
+            SendMessage(new GameSetupMessage()
+            {
+                Id = 0x002F,
+                Field0 = 0x00000077,
+            }, buffer);
+
+            SendMessage(new SavePointInfoMessage()
+            {
+                Id = 0x0045,
+                snoLevelArea = -1,
+            }, buffer);
+
+            SendMessage(new HearthPortalInfoMessage()
+            {
+                Id = 0x0046,
+                snoLevelArea = -1,
+                Field1 = -1,
+            }, buffer);
+
+            SendMessage(new ActTransitionMessage()
+            {
+                Id = 0x00A8,
+                Field0 = 0x00000000,
+                Field1 = true,
+            }, buffer);
+
+            #region Quest
+            SendMessage(new QuestUpdateMessage()
+            {
+                Id = 0x0093,
+                snoQuest = 0x00015694,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = false,
+                Field4 = false,
+            }, buffer);
+
+            SendMessage(new QuestMeterMessage()
+            {
+                Id = 0x0094,
+                snoQuest = 0x00015694,
+                Field1 = -1,
+                Field2 = -1f,
+            }, buffer);
+
+            SendMessage(new QuestUpdateMessage()
+            {
+                Id = 0x0093,
+                snoQuest = 0x0001199F,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = false,
+                Field4 = false,
+            }, buffer);
+
+            SendMessage(new QuestMeterMessage()
+            {
+                Id = 0x0094,
+                snoQuest = 0x0001199F,
+                Field1 = -1,
+                Field2 = -1f,
+            }, buffer);
+
+            SendMessage(new QuestUpdateMessage()
+            {
+                Id = 0x0093,
+                snoQuest = 0x00011A1D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = false,
+                Field4 = false,
+            }, buffer);
+
+            SendMessage(new QuestMeterMessage()
+            {
+                Id = 0x0094,
+                snoQuest = 0x00011A1D,
+                Field1 = -1,
+                Field2 = -1f,
+            }, buffer);
+
+            SendMessage(new QuestUpdateMessage()
+            {
+                Id = 0x0093,
+                snoQuest = 0x0001197D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = false,
+                Field4 = false,
+            }, buffer);
+
+            SendMessage(new QuestMeterMessage()
+            {
+                Id = 0x0094,
+                snoQuest = 0x0001197D,
+                Field1 = -1,
+                Field2 = -1f,
+            }, buffer);
+
+            SendMessage(new QuestUpdateMessage()
+            {
+                Id = 0x0093,
+                snoQuest = 0x00011C22,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = false,
+                Field4 = false,
+            }, buffer);
+
+            SendMessage(new QuestMeterMessage()
+            {
+                Id = 0x0094,
+                snoQuest = 0x00011C22,
+                Field1 = -1,
+                Field2 = -1f,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x00015694,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000000,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x0001199F,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000000,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x0001199F,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000001,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x00011A1D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000000,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x0001197D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000000,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x0001197D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000001,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x0001197D,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000002,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new QuestCounterMessage()
+            {
+                Id = 0x0095,
+                snoQuest = 0x00011C22,
+                snoLevelArea = -1,
+                Field2 = -1,
+                Field3 = 0x00000000,
+                Field4 = 0x00000000,
+                Field5 = 0x00000000,
+            }, buffer);
+            #endregion
+            #region AssignSkill
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000003,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000004,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = -1,
+                Field1 = 0x00000005,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0067,
+                snoPower = -1,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0067,
+                snoPower = -1,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0067,
+                snoPower = -1,
+                Field1 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new IntDataMessage()
+            {
+                Id = 0x006B,
+                Field0 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = 0x000176C4,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new IntDataMessage()
+            {
+                Id = 0x006B,
+                Field0 = 0x00000004,
+            }, buffer);
+
+            SendMessage(new AssignSkillMessage()
+            {
+                Id = 0x0066,
+                snoPower = 0x000216FA,
+                Field1 = 0x00000001,
+            }, buffer);
+            #endregion
+            #region NewPlayer
+            SendMessage(new NewPlayerMessage()
+            {
+                Id = 0x0031,
+                Field0 = 0x00000000,
+                Field1 = "",
+                Field2 = "NEWMONK#349",
+                Field3 = 0x00000002,
+                Field4 = 0x00000004,
+                snoActorPortrait = 0x00001271,
+                Field6 = 0x00000001,
+                #region HeroStateData
+                Field7 = new HeroStateData()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = 0x00000000,
+                    Field2 = 0x00000000,
+                    Field3 = 0x00000000,
+                    Field4 = new PlayerSavedData()
+                    {
+                        #region HotBarButtonData
+                        Field0 = new HotbarButtonData[9]
+            {
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x000176C4,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x00007780,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x00007780,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x000216FA,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = 0x622256D4,
+                 },
+            },
+                        #endregion
+                        #region SkillKeyMapping
+                        Field1 = new SkillKeyMapping[15]
+            {
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+            },
+                        #endregion
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000001,
+                        #region HirelingSavedData
+                        Field4 = new HirelingSavedData()
+                        {
+                            Field0 = new HirelingInfo[4]
+                {
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                },
+                            Field1 = 0x00000000,
+                            Field2 = 0x00000000,
+                        },
+                        #endregion
+                        Field5 = 0x00000000,
+                        #region LearnedLore
+                        Field6 = new LearnedLore()
+                        {
+                            Field0 = 0x00000000,
+                            m_snoLoreLearned = new int[256]
+                {
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                },
+                        },
+                        #endregion
+                        #region snoActiveSkills
+                        snoActiveSkills = new int[6]
+            {
+                0x000176C4, 0x000216FA, -1, -1, -1, -1, 
+            },
+                        #endregion
+                        #region snoTraits
+                        snoTraits = new int[3]
+            {
+                -1, -1, -1, 
+            },
+                        #endregion
+                        #region SavePointData
+                        Field9 = new SavePointData()
+                        {
+                            snoWorld = -1,
+                            Field1 = -1,
+                        },
+                        #endregion
+                        #region SeenTutorials
+                        m_SeenTutorials = new int[64]
+            {
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+            },
+                        #endregion
+                    },
+                    Field5 = 0x00000000,
+                    #region PlayerQuestRewardHistoryEntry
+                    tQuestRewardHistory = new PlayerQuestRewardHistoryEntry[0]
+        {
+        },
+                    #endregion
+                },
+                #endregion
+                Field8 = false,
+                Field9 = 0x00000001,
+                Field10 = 0x789E00E2,
+            }, buffer);
+            #endregion
+            #region GenericBlobMessages 0x0032,0x00ED,0x00EE,0x00EF
+            SendMessage(new GenericBlobMessage()
+            {
+                Id = 0x0032,
+                Data = new byte[22]
+    {
+        0x08, 0x00, 0x12, 0x12, 0x08, 0x08, 0x10, 0x03, 0x18, 0x04, 0x20, 0x0B, 0x28, 0x14, 0x30, 0x07, 
+        0x38, 0x0B, 0x40, 0x04, 0x48, 0x01, 
+    },
+            }, buffer);
+
+            SendMessage(new GenericBlobMessage()
+            {
+                Id = 0x00ED,
+                Data = new byte[11]
+    {
+        0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+    },
+            }, buffer);
+
+            SendMessage(new GenericBlobMessage()
+            {
+                Id = 0x00EE,
+                Data = new byte[11]
+    {
+        0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+    },
+            }, buffer);
+
+            SendMessage(new GenericBlobMessage()
+            {
+                Id = 0x00EF,
+                Data = new byte[11]
+    {
+        0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+    },
+            }, buffer);
+            #endregion
+            #region GameSyncedData
+            SendMessage(new GameSyncedDataMessage()
+            {
+                Id = 0x00AF,
+                Field0 = new GameSyncedData()
+                {
+                    Field0 = false,
+                    Field1 = 0x00000000,
+                    Field2 = 0x00000000,
+                    Field3 = 0x00000000,
+                    Field4 = 0x00000000,
+                    Field5 = 0x00000000,
+                    Field6 = new int[2]
+        {
+            0x00000000, 0x00000000, 
+        },
+                    Field7 = new int[2]
+        {
+            0x00000000, 0x00000000, 
+        },
+                },
+            }, buffer);
+            #endregion
+            #region MapMarkerInfo
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xDF83395C),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2106.404f,
+                        Field1 = 604.0991f,
+                        Field2 = -4.181701f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xD95EA7CD),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1691.334f,
+                        Field1 = 2730.091f,
+                        Field2 = 37.06796f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = 0x4F1F4631,
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x25AC7F8A,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2092.469f,
+                        Field1 = 2715.238f,
+                        Field2 = 37.96085f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = 0x4208C1C7,
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xAB7BC18D),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2032.983f,
+                        Field1 = 1776.411f,
+                        Field2 = 1.434785f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0x911000CE),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x17E66869,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2164.757f,
+                        Field1 = 2475.003f,
+                        Field2 = 30.89584f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = 0x4717C68B,
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x2DFE4150,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2415.898f,
+                        Field1 = 4024.81f,
+                        Field2 = -4.088893f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x57C0F73E,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1745.596f,
+                        Field1 = 353.9031f,
+                        Field2 = -4.620636f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xAEC5316E),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2254.563f,
+                        Field1 = 840.8909f,
+                        Field2 = 0.1090355f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = 0x3FD1BF43,
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xF8B8447D),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 427.9307f,
+                        Field1 = 881.0613f,
+                        Field2 = 16.65557f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0xF52F48D1),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1425.811f,
+                        Field1 = 2716.384f,
+                        Field2 = 44.07326f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE83E7E16),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x79E0DAF9,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2981.73f,
+                        Field1 = 2835.009f,
+                        Field2 = 24.66344f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x0001FA21,
+                m_snoStringList = 0x0000F063,
+                Field4 = unchecked((int)0x9799F57B),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = false,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x096D643D,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1605.721f,
+                        Field1 = 3738.172f,
+                        Field2 = 50.15869f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x04A6FD7C,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2233.954f,
+                        Field1 = 1793.8f,
+                        Field2 = 6.619959f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0x8ADED0D3),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0x804D7E86),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2195.51f,
+                        Field1 = 4953.244f,
+                        Field2 = 21.84594f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x09789C6F,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1079.47f,
+                        Field1 = 3379.56f,
+                        Field2 = 66.53082f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xC3352792),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0x92838DF5),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 402.9449f,
+                        Field1 = 665.2502f,
+                        Field2 = 15.94455f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x5A31647A,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 1092.551f,
+                        Field1 = 4004.261f,
+                        Field2 = 79.52255f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xE14E1218),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x24F55785,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2176.305f,
+                        Field1 = 1939.683f,
+                        Field2 = -3.581532f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0x8ADED0D2),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0x872321FD),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2765.661f,
+                        Field1 = 1974.691f,
+                        Field2 = -7.464648f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0x86305A9E),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = 0x7E28F29F,
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2284.176f,
+                        Field1 = 2557.326f,
+                        Field2 = 27.7173f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = 0x4208C1C6,
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new MapMarkerInfoMessage()
+            {
+                Id = 0x00E9,
+                Field0 = unchecked((int)0x8B988FCF),
+                Field1 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2993.722f,
+                        Field1 = 2782.086f,
+                        Field2 = 24.32831f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field2 = 0x00018FB0,
+                m_snoStringList = 0x0000CB2E,
+                Field4 = unchecked((int)0xF0216008),
+                Field5 = 0f,
+                Field6 = 0f,
+                Field7 = 0f,
+                Field8 = 0x00000000,
+                Field9 = true,
+                Field10 = false,
+                Field11 = true,
+                Field12 = 0x00000000,
+            }, buffer);
+            #endregion
+            #region Interstitial,RevealWorld,WorldStatus,EnterWorld
+            SendMessage(new InterstitialMessage()
+            {
+                Id = 0x00A9,
+                Field0 = 0x00000004,
+                Field1 = true,
+            }, buffer);
+
+            SendMessage(new RevealWorldMessage()
+            {
+                Id = 0x0037,
+                Field0 = 0x772E0000,
+                Field1 = 0x000115EE,
+            }, buffer);
+
+            SendMessage(new WorldStatusMessage()
+            {
+                Id = 0x00B4,
+                Field0 = 0x772E0000,
+                Field1 = false,
+            }, buffer);
+
+            SendMessage(new EnterWorldMessage()
+            {
+                Id = 0x0033,
+                Field0 = new Vector3D() { Field0 = 3143.75f, Field1 = 2828.75f, Field2 = 59.07559f },
+                Field1 = 0x772E0000,
+                Field2 = 0x000115EE,
+            }, buffer);
+            #endregion
+            #region RevealScene/MapRevealScen
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x00000033,
+                        Field1 = 0x0000002E,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            0x00004DEB, 0x00026186, -1, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = 0x00000000,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = 0x00000000,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x000206F8,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x00013220,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x00000002,
+                    Field16 = 0x00000002,
+                    Field17 = 0x00000000,
+                    Field18 = -1,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 115.9387f,
+                                Field1 = 125.2578f,
+                                Field2 = 43.82879f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 124.0615f,
+                                Field1 = 131.6655f,
+                                Field2 = 57.26923f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 115.9387f,
+                                Field1 = 125.2578f,
+                                Field2 = 43.82879f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 124.0615f,
+                                Field1 = 131.6655f,
+                                Field2 = 57.26923f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x00000000, 0x000004C8, 0x00000000, 0x00000000, 
+            },
+                        Field6 = 0x00000009,
+                    },
+                },
+                Field2 = 0x77560002,
+                snoScene = 0x00008245,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x77560002,
+                snoScene = 0x00008245,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x0000002B,
+                        Field1 = 0x0000002E,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            0x000316CE, -1, 0x00004DEB, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = 0x00000000,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = 0x00000000,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x00021AF7,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x00013220,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x00000000,
+                    Field16 = 0x00000000,
+                    Field17 = 0x00000000,
+                    Field18 = -1,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 119.8279f,
+                                Field1 = 126.4012f,
+                                Field2 = 36.26942f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 130.6345f,
+                                Field1 = 128.5111f,
+                                Field2 = 40.50302f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 122.8899f,
+                                Field1 = 126.4012f,
+                                Field2 = 36.26942f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 133.6965f,
+                                Field1 = 128.5111f,
+                                Field2 = 40.50302f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x00000315, 0x00000000, 0x0000009B, 0x00000000, 
+            },
+                        Field6 = 0x00000009,
+                    },
+                },
+                Field2 = 0x77540000,
+                snoScene = 0x00008243,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2580f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x77540000,
+                snoScene = 0x00008243,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2580f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x0000002F,
+                        Field1 = 0x0000002A,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            0x00004DEB, -1, -1, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = 0x00000000,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = 0x00000000,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x000206F8,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x00013220,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x00000036,
+                    Field16 = 0x00000036,
+                    Field17 = 0x00000000,
+                    Field18 = 0x00000017,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 120.0193f,
+                                Field1 = 126.4575f,
+                                Field2 = 27.89188f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 128.8389f,
+                                Field1 = 133.2742f,
+                                Field2 = 41.33233f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 120.0193f,
+                                Field1 = 126.4575f,
+                                Field2 = 26.40827f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 128.8389f,
+                                Field1 = 133.2742f,
+                                Field2 = 42.81593f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x0000093A, 0x00000000, 0x00000000, 0x00000000, 
+            },
+                        Field6 = 0x00000009,
+                    },
+                },
+                Field2 = 0x778A0036,
+                snoScene = 0x0000823E,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2820f,
+                        Field1 = 2520f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x778A0036,
+                snoScene = 0x0000823E,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2820f,
+                        Field1 = 2520f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x00000033,
+                        Field1 = 0x0000002A,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            0x00004DEB, -1, -1, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = 0x00000000,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = 0x00000000,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x000206F8,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x00013220,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x0000003C,
+                    Field16 = 0x0000003C,
+                    Field17 = 0x00000000,
+                    Field18 = -1,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 112.136f,
+                                Field1 = 122.7885f,
+                                Field2 = 19.60409f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 127.8643f,
+                                Field1 = 122.7885f,
+                                Field2 = 35.97958f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 112.136f,
+                                Field1 = 122.7885f,
+                                Field2 = 19.60409f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 127.8643f,
+                                Field1 = 122.7885f,
+                                Field2 = 35.97958f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x000000CF, 0x00000000, 0x00000000, 0x00000000, 
+            },
+                        Field6 = 0x00000009,
+                    },
+                },
+                Field2 = 0x7790003C,
+                snoScene = 0x0000823F,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2520f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x7790003C,
+                snoScene = 0x0000823F,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2520f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x00000033,
+                        Field1 = 0x00000026,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            -1, -1, -1, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = -1,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = -1,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x000206F8,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x0000C575,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x00000089,
+                    Field16 = 0x00000089,
+                    Field17 = 0x00000000,
+                    Field18 = -1,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 119.9998f,
+                                Field1 = 120.0008f,
+                                Field2 = -6.470332f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 120.0005f,
+                                Field1 = 120.0008f,
+                                Field2 = 6.970119f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 119.9998f,
+                                Field1 = 120.0008f,
+                                Field2 = -6.470333f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 120.0005f,
+                                Field1 = 120.0008f,
+                                Field2 = 6.97012f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+            },
+                        Field6 = 0x00000001,
+                    },
+                },
+                Field2 = 0x77DD0089,
+                snoScene = 0x0000823A,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2280f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x77DD0089,
+                snoScene = 0x0000823A,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 3060f,
+                        Field1 = 2280f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000000,
+            }, buffer);
+            #endregion
+
+            #region ACDEnterKnown 0x789E00E2 PlayerId??
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789E00E2,
+                Field1 = 0x00001271,
+                Field2 = 0x00000009,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.43f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.05940768f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9982339f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3143.75f,
+                            Field1 = 2828.75f,
+                            Field2 = 59.07559f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = 0x00000007,
+                    Field1 = 0x003DAC15,
+                },
+                Field7 = -1,
+                Field8 = -1,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789E00E2,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x01F8], // SkillKit 
+            Int = 0x00008AFA,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00033C40,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00007545,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00007545,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000226,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 0.5f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000226,
+            Attribute = GameAttribute.Attributes[0x003C], // Resistance 
+            Int = 0x00000000,
+            Float = 0.5f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00D7], // Immobolize 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00D6], // Untargetable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000076B7,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000076B7,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000006DF,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000CE11,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x01D2], // CantStartDisplayedPowers 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000216FA,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000176C4,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000216FA,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000176C4,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000006DF,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000000DE,
+            Attribute = GameAttribute.Attributes[0x003C], // Resistance 
+            Int = 0x00000000,
+            Float = 0.5f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000000DE,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 0.5f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C8], // Get_Hit_Recovery 
+            Int = 0x00000000,
+            Float = 6f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C7], // Get_Hit_Recovery_Per_Level 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C6], // Get_Hit_Recovery_Base 
+            Int = 0x00000000,
+            Float = 5f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00007780,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C5], // Get_Hit_Max 
+            Int = 0x00000000,
+            Float = 60f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00007780,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C4], // Get_Hit_Max_Per_Level 
+            Int = 0x00000000,
+            Float = 10f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00C3], // Get_Hit_Max_Base 
+            Int = 0x00000000,
+            Float = 50f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00BE], // Dodge_Rating_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x02BA], // IsTrialActor 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x00A8], // Crit_Percent_Cap 
+            Int = 0x3F400000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x005E], // Resource_Cur 
+            Int = 0x43480000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x005F], // Resource_Max 
+            Int = 0x00000000,
+            Float = 200f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0061], // Resource_Max_Total 
+            Int = 0x43480000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x009D], // Damage_Weapon_Min_Total_All 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0099], // Damage_Weapon_Delta_Total_All 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0068], // Resource_Regen_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x006B], // Resource_Effective_Max 
+            Int = 0x00000000,
+            Float = 200f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x018F], // Attacks_Per_Second_Item_CurrentHand 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0189], // Attacks_Per_Second_Item_Total_MainHand 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0089], // Attacks_Per_Second_Total 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0087], // Attacks_Per_Second 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0187], // Attacks_Per_Second_Item_MainHand 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0086], // Attacks_Per_Second_Item_Total 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00033C40,
+            Attribute = GameAttribute.Attributes[0x01BE], // Buff_Icon_End_Tick0 
+            Int = 0x000003FB,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0084], // Attacks_Per_Second_Item_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0082], // Attacks_Per_Second_Item 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00033C40,
+            Attribute = GameAttribute.Attributes[0x01BA], // Buff_Icon_Start_Tick0 
+            Int = 0x00000077,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0081], // Hit_Chance 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x007F], // Casting_Speed_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x007D], // Casting_Speed 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x007B], // Movement_Scalar_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0002EC66,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0079], // Movement_Scalar_Capped_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0078], // Movement_Scalar_Subtotal 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0076], // Strafing_Rate_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0075], // Sprinting_Rate_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0074], // Running_Rate_Total 
+            Int = 0x00000000,
+            Float = 0.3598633f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018B], // Damage_Weapon_Min_Total_MainHand 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0073], // Walking_Rate_Total 
+            Int = 0x00000000,
+            Float = 0.2797852f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018D], // Damage_Weapon_Delta_Total_MainHand 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0070], // Running_Rate 
+            Int = 0x00000000,
+            Float = 0.3598633f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x006F], // Walking_Rate 
+            Int = 0x00000000,
+            Float = 0.2797852f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x006E], // Movement_Scalar 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000001,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000002,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000003,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000004,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000005,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000006,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0094], // Damage_Weapon_Delta 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0095], // Damage_Weapon_Delta_SubTotal 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0096], // Damage_Weapon_Max 
+            Int = 0x00000000,
+            Float = 3f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0097], // Damage_Weapon_Max_Total 
+            Int = 0x00000000,
+            Float = 3f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0098], // Damage_Weapon_Delta_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000CE11,
+            Attribute = GameAttribute.Attributes[0x027B], // Trait 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x009B], // Damage_Weapon_Min 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x009C], // Damage_Weapon_Min_Total 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000CE11,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000CE11,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x005C], // Resource_Type_Primary 
+            Int = 0x00000003,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 76f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 40f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0050], // Hitpoints_Total_From_Vitality 
+            Int = 0x00000000,
+            Float = 36f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004F], // Hitpoints_Factor_Vitality 
+            Int = 0x00000000,
+            Float = 4f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004E], // Hitpoints_Factor_Level 
+            Int = 0x00000000,
+            Float = 4f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 76f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x024C], // Disabled 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0046], // Loading 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0045], // Invulnerable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000002,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000CE11,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789E00E2,
+                atKeyVals = new NetAttributeKeyValue[14]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x012C], // Hidden 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0027], // Level_Cap 
+            Int = 0x0000000D,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0022], // Experience_Next 
+            Int = 0x000004B0,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0021], // Experience_Granted 
+            Int = 0x000003E8,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0020], // Armor_Total 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x000C], // Defense 
+            Int = 0x00000000,
+            Float = 10f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00033C40,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x000B], // Vitality 
+            Int = 0x00000000,
+            Float = 9f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x000A], // Precision 
+            Int = 0x00000000,
+            Float = 11f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0009], // Attack 
+            Int = 0x00000000,
+            Float = 10f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0008], // Shared_Stash_Slots 
+            Int = 0x0000000E,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0007], // Backpack_Slots 
+            Int = 0x0000003C,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0103], // General_Cooldown 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789E00E2,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789E00E2,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789E00E2,
+                Field1 = 3.022712f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new PlayerEnterKnownMessage()
+            {
+                Id = 0x003D,
+                Field0 = 0x00000000,
+                Field1 = 0x789E00E2,
+            }, buffer);
+
+            SendMessage(new VisualInventoryMessage()
+            {
+                Id = 0x004E,
+                Field0 = 0x789E00E2,
+                Field1 = new VisualEquipment()
+                {
+                    Field0 = new VisualItem[8]
+        {
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = 0x49B51827,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = -1,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+        },
+                },
+            }, buffer);
+
+            SendMessage(new PlayerActorSetInitialMessage()
+            {
+                Id = 0x0039,
+                Field0 = 0x789E00E2,
+                Field1 = 0x00000000,
+            }, buffer);
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001271,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789700DB
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789700DB,
+                Field1 = 0x00001767,
+                Field2 = 0x00000018,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.11f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9330626f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.3597142f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3108.125f,
+                            Field1 = 2882.163f,
+                            Field2 = 64.49878f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001767,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789700DB,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789700DB,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789700DB,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789700DB,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789700DB,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789700DB,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789700DB,
+                Field1 = 0.7359439f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001767,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789800DC
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789800DC,
+                Field1 = 0x0000157F,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.05940768f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9982339f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3143.104f,
+                            Field1 = 2829.936f,
+                            Field2 = 59.07556f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000157F,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789800DC,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789800DC,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789800DC,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789800DC,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789800DC,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789800DC,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789800DC,
+                Field1 = 3.022712f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000157F,
+                },
+            }, buffer);
+
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789900DD,
+                Field1 = 0x000201E5,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9878305f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.1555345f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3109.516f,
+                            Field1 = 2803.876f,
+                            Field2 = 59.07428f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x000201E5,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789900DD,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789900DD,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789900DD,
+                Field1 = 0x00000411,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789900DD,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789900DD,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789900DD,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789900DD,
+                Field1 = 0.3123385f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000201E5,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789A00DE
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789A00DE,
+                Field1 = 0x00013871,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.7652696f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.6437099f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3113.659f,
+                            Field1 = 2803.692f,
+                            Field2 = 73.26618f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00013871,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000003,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789A00DE,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789A00DE,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789A00DE,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789A00DE,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789A00DE,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789A00DE,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789A00DE,
+                Field1 = 4.884459f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00013871,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789B00DF
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789B00DF,
+                Field1 = 0x00000D86,
+                Field2 = 0x00000018,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9976531f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0.009601643f,
+                                Field1 = -0.0006524475f,
+                                Field2 = -0.06779216f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3127.913f,
+                            Field1 = 2830.662f,
+                            Field2 = 59.07558f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00000D86,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000004,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789B00DF,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789B00DF,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789B00DF,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789B00DF,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789B00DF,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789B00DF,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789B00DF,
+                Field1 = 6.147496f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00000D86,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789C00E0
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789C00E0,
+                Field1 = 0x00013870,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.4954694f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.8686254f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3120.037f,
+                            Field1 = 2864.345f,
+                            Field2 = 59.07556f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00013870,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00012A04,
+                Field13 = 0x00000006,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789C00E0,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789C00E0,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789C00E0,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789C00E0,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789C00E0,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789C00E0,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x789C00E0,
+                Field1 = 2.104887f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00013870,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x789F00E3
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00001025,
+                Field2 = 0x0000001A,
+                Field3 = 0x00000001,
+                Field4 = null,
+                Field5 = new InventoryLocationMessageData()
+                {
+                    Field0 = 0x789E00E2,
+                    Field1 = 0x00000004,
+                    Field2 = new IVector2D()
+                    {
+                        Field0 = 0x00000000,
+                        Field1 = 0x00000000,
+                    },
+                },
+                Field6 = new GBHandle()
+                {
+                    Field0 = 0x00000002,
+                    Field1 = 0x49B51827,
+                },
+                Field7 = -1,
+                Field8 = -1,
+                Field9 = 0x00000001,
+                Field10 = 0x00,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00000080,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789F00E3,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00007780,
+            Attribute = GameAttribute.Attributes[0x0041], // Skill 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x009D], // Damage_Weapon_Min_Total_All 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x009C], // Damage_Weapon_Min_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0099], // Damage_Weapon_Delta_Total_All 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0097], // Damage_Weapon_Max_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x0096], // Damage_Weapon_Max 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x018C], // Damage_Weapon_Min_Total_OffHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x018B], // Damage_Weapon_Min_Total_MainHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x018A], // Attacks_Per_Second_Item_Total_OffHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0089], // Attacks_Per_Second_Total 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0189], // Attacks_Per_Second_Item_Total_MainHand 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0188], // Attacks_Per_Second_Item_OffHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0187], // Attacks_Per_Second_Item_MainHand 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0086], // Attacks_Per_Second_Item_Total 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0084], // Attacks_Per_Second_Item_Subtotal 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789F00E3,
+                atKeyVals = new NetAttributeKeyValue[15]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0082], // Attacks_Per_Second_Item 
+            Int = 0x00000000,
+            Float = 1.199219f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018B], // Damage_Weapon_Min_Total_MainHand 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018C], // Damage_Weapon_Min_Total_OffHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018D], // Damage_Weapon_Delta_Total_MainHand 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x018E], // Damage_Weapon_Delta_Total_OffHand 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0094], // Damage_Weapon_Delta 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0095], // Damage_Weapon_Delta_SubTotal 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0096], // Damage_Weapon_Max 
+            Int = 0x00000000,
+            Float = 3f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0097], // Damage_Weapon_Max_Total 
+            Int = 0x00000000,
+            Float = 3f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0098], // Damage_Weapon_Delta_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x009B], // Damage_Weapon_Min 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x009C], // Damage_Weapon_Min_Total 
+            Int = 0x00000000,
+            Float = 2f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0125], // Seed 
+            Int = unchecked((int)0xED34A51F),
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0124], // IdentifyCost 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0117], // Item_Equipped 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x789F00E3,
+                atKeyVals = new NetAttributeKeyValue[3]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0115], // Item_Quality_Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0113], // Durability_Max 
+            Int = 0x00000190,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0112], // Durability_Cur 
+            Int = 0x00000190,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x789F00E3,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x789F00E3,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001025,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78A000E4
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00001158,
+                Field2 = 0x0000001A,
+                Field3 = 0x00000001,
+                Field4 = null,
+                Field5 = new InventoryLocationMessageData()
+                {
+                    Field0 = 0x789E00E2,
+                    Field1 = 0x00000000,
+                    Field2 = new IVector2D()
+                    {
+                        Field0 = 0x00000000,
+                        Field1 = 0x00000000,
+                    },
+                },
+                Field6 = new GBHandle()
+                {
+                    Field0 = 0x00000002,
+                    Field1 = 0x622256D4,
+                },
+                Field7 = -1,
+                Field8 = -1,
+                Field9 = 0x00000001,
+                Field10 = 0x00,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00000080,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78A000E4,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0052], // Hitpoints_Granted 
+            Int = 0x00000000,
+            Float = 100f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0125], // Seed 
+            Int = unchecked((int)0x884DCD35),
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0121], // ItemStackQuantityLo 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0115], // Item_Quality_Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78A000E4,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78A000E4,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001158,
+                },
+            }, buffer);
+            #endregion
+
+            #region ACDEnterKnown 0x78BE0102
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78BE0102,
+                Field1 = 0x0001B186,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.13f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9009878f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.4338445f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3007.198f,
+                            Field1 = 2712.854f,
+                            Field2 = 23.76516f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001B186,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000F05D,
+                Field13 = 0x00000012,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78BE0102,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78BE0102,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78BE0102,
+                Field1 = 0x00000102,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78BE0102,
+                atKeyVals = new NetAttributeKeyValue[9]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0159], // Conversation_Icon 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0156], // NPC_Is_Operatable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 8.523438f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0155], // Is_NPC 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 8.523438f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 8.523438f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78BE0102,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78BE0102,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78BE0102,
+                Field1 = 5.385688f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SetIdleAnimationMessage()
+            {
+                Id = 0x00A5,
+                Field0 = 0x78BE0102,
+                Field1 = 0x00011150,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001B186,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78DD0118
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78DD0118,
+                Field1 = 0x0000157E,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.01089788f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9999406f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3125.888f,
+                            Field1 = 2602.642f,
+                            Field2 = 1.050535f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000157E,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00011B71,
+                Field13 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DD0118,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DD0118,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78DD0118,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78DD0118,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78DD0118,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78DD0118,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78DD0118,
+                Field1 = 3.163388f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000157E,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78DE0119
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78DE0119,
+                Field1 = 0x00000D86,
+                Field2 = 0x00000018,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3083.982f,
+                            Field1 = 2603.142f,
+                            Field2 = 0.4151611f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00000D86,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00011B71,
+                Field13 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DE0119,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DE0119,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78DE0119,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78DE0119,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78DE0119,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78DE0119,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78DE0119,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00000D86,
+                },
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78DF011A
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78DF011A,
+                Field1 = 0x000255BB,
+                Field2 = 0x00000008,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.13f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.1261874f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9920065f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3131.338f,
+                            Field1 = 2597.316f,
+                            Field2 = 0.9298096f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x000255BB,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x00011B71,
+                Field13 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DF011A,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78DF011A,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78DF011A,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78DF011A,
+                atKeyVals = new NetAttributeKeyValue[13]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0158], // NPC_Has_Interact_Options 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x00000000,
+            Attribute = GameAttribute.Attributes[0x0159], // Conversation_Icon 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F972,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F972,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0156], // NPC_Is_Operatable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 14.00781f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0155], // Is_NPC 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 14.00781f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 14.00781f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000004,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78DF011A,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78DF011A,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78DF011A,
+                Field1 = 2.888546f,
+                Field2 = false,
+            }, buffer);
+
+            SendMessage(new SetIdleAnimationMessage()
+            {
+                Id = 0x00A5,
+                Field0 = 0x78DF011A,
+                Field1 = 0x00011150,
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000255BB,
+                },
+            }, buffer);
+
+            SendMessage(new HeroStateMessage()
+            {
+                Id = 0x003A,
+                Field0 = new HeroStateData()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = 0x00000000,
+                    Field2 = 0x00000000,
+                    Field3 = 0x02000000,
+                    Field4 = new PlayerSavedData()
+                    {
+                        Field0 = new HotbarButtonData[9]
+            {
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x000176C4,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x00007780,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x00007780,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = 0x000216FA,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = -1,
+                 },
+                 new HotbarButtonData()
+                 {
+                    m_snoPower = -1,
+                    m_gbidItem = 0x622256D4,
+                 },
+            },
+                        Field1 = new SkillKeyMapping[15]
+            {
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+                 new SkillKeyMapping()
+                 {
+                    Power = -1,
+                    Field1 = -1,
+                    Field2 = 0x00000000,
+                 },
+            },
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000001,
+                        Field4 = new HirelingSavedData()
+                        {
+                            Field0 = new HirelingInfo[4]
+                {
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                     new HirelingInfo()
+                     {
+                        Field0 = 0x00000000,
+                        Field1 = -1,
+                        Field2 = 0x00000000,
+                        Field3 = 0x00000000,
+                        Field4 = false,
+                        Field5 = -1,
+                        Field6 = -1,
+                        Field7 = -1,
+                        Field8 = -1,
+                     },
+                },
+                            Field1 = 0x00000000,
+                            Field2 = 0x00000000,
+                        },
+                        Field5 = 0x00000000,
+                        Field6 = new LearnedLore()
+                        {
+                            Field0 = 0x00000000,
+                            m_snoLoreLearned = new int[256]
+                {
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 
+                },
+                        },
+                        snoActiveSkills = new int[6]
+            {
+                0x000176C4, 0x000216FA, -1, -1, -1, -1, 
+            },
+                        snoTraits = new int[3]
+            {
+                -1, -1, -1, 
+            },
+                        Field9 = new SavePointData()
+                        {
+                            snoWorld = -1,
+                            Field1 = -1,
+                        },
+                        m_SeenTutorials = new int[64]
+            {
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+                -1, -1, -1, -1, -1, -1, -1, -1, 
+            },
+                    },
+                    Field5 = 0x00000000,
+                    tQuestRewardHistory = new PlayerQuestRewardHistoryEntry[0]
+        {
+        },
+                },
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003C,
+                Field0 = 0x78BE0102,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003C,
+                Field0 = 0x78DF011A,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000000,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000001,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000002,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000003,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000004,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000005,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000006,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000007,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000008,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000009,
+                Field1 = 0x00000000,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000A,
+                Field1 = 0x00000002,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000B,
+                Field1 = 0x00000002,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000C,
+                Field1 = 0x00000002,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000D,
+                Field1 = 0x00000002,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000E,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x0000000F,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000010,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000011,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000012,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000013,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000014,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000015,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealTeamMessage()
+            {
+                Id = 0x0038,
+                Field0 = 0x00000016,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new RevealSceneMessage()
+            {
+                Id = 0x0034,
+                Field0 = 0x772E0000,
+                Field1 = new SceneSpecification()
+                {
+                    Field0 = 0x00000000,
+                    Field1 = new IVector2D()
+                    {
+                        Field0 = 0x0000002F,
+                        Field1 = 0x0000002E,
+                    },
+                    arSnoLevelAreas = new int[4]
+        {
+            0x00004DEB, 0x00026186, 0x000316CE, -1, 
+        },
+                    snoPrevWorld = -1,
+                    Field4 = 0x00000000,
+                    snoPrevLevelArea = -1,
+                    snoNextWorld = -1,
+                    Field7 = 0x00000000,
+                    snoNextLevelArea = -1,
+                    snoMusic = 0x000206F8,
+                    snoCombatMusic = -1,
+                    snoAmbient = 0x0002734F,
+                    snoReverb = 0x000153F6,
+                    snoWeather = 0x00013220,
+                    snoPresetWorld = 0x000115EE,
+                    Field15 = 0x00000001,
+                    Field16 = 0x00000001,
+                    Field17 = 0x00000000,
+                    Field18 = -1,
+                    tCachedValues = new SceneCachedValues()
+                    {
+                        Field0 = 0x0000003F,
+                        Field1 = 0x00000060,
+                        Field2 = 0x00000060,
+                        Field3 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 118.3843f,
+                                Field1 = 119.1316f,
+                                Field2 = 43.57133f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 134.2307f,
+                                Field1 = 131.5811f,
+                                Field2 = 43.57133f,
+                            },
+                        },
+                        Field4 = new AABB()
+                        {
+                            Field0 = new Vector3D()
+                            {
+                                Field0 = 113.465f,
+                                Field1 = 119.1316f,
+                                Field2 = 43.57133f,
+                            },
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 139.15f,
+                                Field1 = 131.5811f,
+                                Field2 = 43.57133f,
+                            },
+                        },
+                        Field5 = new int[4]
+            {
+                0x0000083F, 0x00000371, 0x000001ED, 0x00000000, 
+            },
+                        Field6 = 0x00000009,
+                    },
+                },
+                Field2 = 0x77550001,
+                snoScene = 0x00008244,
+                Field4 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2820f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field5 = -1,
+                snoSceneGroup = -1,
+                arAppliedLabels = new int[1]
+    {
+        0x00360E26, 
+    },
+            }, buffer);
+
+            SendMessage(new MapRevealSceneMessage()
+            {
+                Id = 0x0044,
+                Field0 = 0x77550001,
+                snoScene = 0x00008244,
+                Field2 = new PRTransform()
+                {
+                    Field0 = new Quaternion()
+                    {
+                        Field0 = 1f,
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 0f,
+                            Field1 = 0f,
+                            Field2 = 0f,
+                        },
+                    },
+                    Field1 = new Vector3D()
+                    {
+                        Field0 = 2820f,
+                        Field1 = 2760f,
+                        Field2 = 0f,
+                    },
+                },
+                Field3 = 0x772E0000,
+                Field4 = 0x00000002,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77BC0000
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77BC0000,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2922.286f,
+                            Field1 = 2796.864f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000002,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77BC0000,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77BC0000,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77BC0000,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77BC0000,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77BC0000,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77BC0000,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77BC0000,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77C10005
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77C10005,
+                Field1 = 0x0000192A,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9228876f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.3850694f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2981.73f,
+                            Field1 = 2835.009f,
+                            Field2 = 24.66344f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000192A,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000009,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C10005,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C10005,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77C10005,
+                Field1 = 0x00000080,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77C10005,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77C10005,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77C10005,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77C10005,
+                Field1 = 5.492608f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77C50009
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77C50009,
+                Field1 = 0x0001FD60,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9997472f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 1.02945E-05f,
+                                Field1 = 3.217819E-05f,
+                                Field2 = 0.0224885f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2970.619f,
+                            Field1 = 2789.915f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001FD60,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000000D,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C50009,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C50009,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77C50009,
+                Field1 = 0x00000411,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77C50009,
+                atKeyVals = new NetAttributeKeyValue[11]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x02BC], // MinimapActive 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000F50B,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000F50B,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0045], // Invulnerable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77C50009,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77C50009,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77C50009,
+                Field1 = 0.04497663f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77C9000D
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77C9000D,
+                Field1 = 0x0000157E,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.7700912f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.637934f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2922f,
+                            Field1 = 2787f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000157E,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000013,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C9000D,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77C9000D,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77C9000D,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77C9000D,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77C9000D,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77C9000D,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77C9000D,
+                Field1 = 1.383674f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77CB000F
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77CB000F,
+                Field1 = 0x0000155A,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2924f,
+                            Field1 = 2802f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000155A,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000029,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77CB000F,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77CB000F,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77CB000F,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77CB000F,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77CB000F,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77CB000F,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77CB000F,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77DA001E
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77DA001E,
+                Field1 = 0x00019527,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9999328f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.01160305f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2981.23f,
+                            Field1 = 2785.814f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00019527,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000036,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77DA001E,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77DA001E,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77DA001E,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77DA001E,
+                atKeyVals = new NetAttributeKeyValue[7]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x01C2], // Could_Have_Ragdolled 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77DA001E,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77DA001E,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77DA001E,
+                Field1 = 0.02320435f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77DB001F
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77DB001F,
+                Field1 = 0x00018B03,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2915.467f,
+                            Field1 = 2845.922f,
+                            Field2 = 23.82193f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00018B03,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000037,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77DB001F,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77DB001F,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77DB001F,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77DB001F,
+                atKeyVals = new NetAttributeKeyValue[1]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x0000000A,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77DB001F,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77DB001F,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77DB001F,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77E20026
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77E20026,
+                Field1 = 0x0000157E,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.7700912f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.637934f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2993.917f,
+                            Field1 = 2791.82f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000157E,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000003E,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E20026,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E20026,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77E20026,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77E20026,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77E20026,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77E20026,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77E20026,
+                Field1 = 1.383674f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77E6002A
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77E6002A,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2990.738f,
+                            Field1 = 2828.897f,
+                            Field2 = 23.94533f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000046,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E6002A,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E6002A,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77E6002A,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77E6002A,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77E6002A,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77E6002A,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77E6002A,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77E8002C
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77E8002C,
+                Field1 = 0x0000155A,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2973.246f,
+                            Field1 = 2827.689f,
+                            Field2 = 24.87411f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0000155A,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000049,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E8002C,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77E8002C,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77E8002C,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77E8002C,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77E8002C,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77E8002C,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77E8002C,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77EB002F
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77EB002F,
+                Field1 = 0x000261CF,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3002.507f,
+                            Field1 = 2843.755f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x000261CF,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000004E,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77EB002F,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77EB002F,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77EB002F,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77EB002F,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77EB002F,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77EB002F,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77EB002F,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F00034
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F00034,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9329559f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.3599906f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2939.892f,
+                            Field1 = 2798.311f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000057,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F00034,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F00034,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F00034,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F00034,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F00034,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F00034,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F00034,
+                Field1 = 5.546649f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F20036
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F20036,
+                Field1 = 0x0002B875,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 0.632705f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.7219135f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.6919833f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2993.722f,
+                            Field1 = 2782.086f,
+                            Field2 = 24.32831f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0002B875,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000059,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F20036,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F20036,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new PortalSpecifierMessage()
+            {
+                Id = 0x004B,
+                Field0 = 0x77F20036,
+                Field1 = new ResolvedPortalDestination()
+                {
+                    snoWorld = 0x0001AB32,
+                    Field1 = 0x000000AC,
+                    snoDestLevelArea = 0x0001AB91,
+                },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F20036,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F20036,
+                atKeyVals = new NetAttributeKeyValue[7]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x02BC], // MinimapActive 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F20036,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F20036,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F20036,
+                Field1 = 1.528479f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F30037
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F30037,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2921.905f,
+                            Field1 = 2782.769f,
+                            Field2 = 24.68567f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000005B,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F30037,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F30037,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F30037,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F30037,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F30037,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F30037,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F30037,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F7003B
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F7003B,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2989.97f,
+                            Field1 = 2849.609f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000068,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F7003B,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F7003B,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F7003B,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F7003B,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F7003B,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F7003B,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F7003B,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F8003C
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F8003C,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3013.641f,
+                            Field1 = 2800.703f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000069,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F8003C,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F8003C,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F8003C,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F8003C,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F8003C,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F8003C,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F8003C,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77F9003D
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77F9003D,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2972.528f,
+                            Field1 = 2799.993f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000006A,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F9003D,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77F9003D,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77F9003D,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77F9003D,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77F9003D,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77F9003D,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77F9003D,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77FC0040
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77FC0040,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2894.062f,
+                            Field1 = 2819.54f,
+                            Field2 = 23.94533f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000006D,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FC0040,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FC0040,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77FC0040,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77FC0040,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77FC0040,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77FC0040,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77FC0040,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77FD0041
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77FD0041,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2938.309f,
+                            Field1 = 2814.277f,
+                            Field2 = 23.87319f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000006E,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FD0041,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FD0041,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77FD0041,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77FD0041,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77FD0041,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77FD0041,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77FD0041,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x77FE0042
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x77FE0042,
+                Field1 = 0x00021463,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.07654059f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9970666f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2920.87f,
+                            Field1 = 2779.655f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00021463,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000072,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FE0042,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x77FE0042,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x77FE0042,
+                Field1 = 0x00000411,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x77FE0042,
+                atKeyVals = new NetAttributeKeyValue[5]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000F50B,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0000F50B,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0045], // Invulnerable 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x77FE0042,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x77FE0042,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x77FE0042,
+                Field1 = 2.988367f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78010045
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78010045,
+                Field1 = 0x0001B603,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.8008201f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.598905f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3030.794f,
+                            Field1 = 2770.09f,
+                            Field2 = 23.94532f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001B603,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000075,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78010045,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78010045,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78010045,
+                Field1 = 0x00000C21,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78010045,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F972,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F972,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78010045,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78010045,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78010045,
+                Field1 = 4.99892f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78020046
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78020046,
+                Field1 = 0x0001E345,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9238795f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 2.799833E-05f,
+                                Field1 = 6.323846E-05f,
+                                Field2 = 0.3826835f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2998.413f,
+                            Field1 = 2835.342f,
+                            Field2 = 24.36805f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001E345,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000077,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78020046,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78020046,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78020046,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78020046,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78020046,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78020046,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78020046,
+                Field1 = 0.7854109f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78030047
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78030047,
+                Field1 = 0x0001E344,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9238795f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 2.799833E-05f,
+                                Field1 = 6.323846E-05f,
+                                Field2 = 0.3826835f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2982.224f,
+                            Field1 = 2818.409f,
+                            Field2 = 23.98143f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001E344,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000078,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78030047,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78030047,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78030047,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78030047,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78030047,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78030047,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78030047,
+                Field1 = 0.7854109f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78040048
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78040048,
+                Field1 = 0x0001E343,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9238795f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 2.799833E-05f,
+                                Field1 = 6.323846E-05f,
+                                Field2 = 0.3826835f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2982.041f,
+                            Field1 = 2851.404f,
+                            Field2 = 24.49633f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001E343,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000079,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78040048,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78040048,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78040048,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78040048,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78040048,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78040048,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78040048,
+                Field1 = 0.7854109f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x78050049
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x78050049,
+                Field1 = 0x0001E342,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9238795f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 2.799833E-05f,
+                                Field1 = 6.323846E-05f,
+                                Field2 = 0.3826835f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2965.15f,
+                            Field1 = 2834.933f,
+                            Field2 = 24.04564f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0001E342,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000007A,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78050049,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x78050049,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x78050049,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x78050049,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x78050049,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x78050049,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x78050049,
+                Field1 = 0.7854109f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x7806004A
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x7806004A,
+                Field1 = 0x0002EC04,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2985.959f,
+                            Field1 = 2795.399f,
+                            Field2 = 23.94531f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0002EC04,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x00000080,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x7806004A,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x7806004A,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x7806004A,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x7806004A,
+                atKeyVals = new NetAttributeKeyValue[6]
+    {
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+            Int = 0x00000000,
+            Float = 1f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0051], // Hitpoints_Total_From_Level 
+            Int = 0x00000000,
+            Float = 3.051758E-05f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+            Int = 0x00000000,
+            Float = 0.0009994507f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0026], // Level 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x7806004A,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x7806004A,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x7806004A,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x7809004D
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x7809004D,
+                Field1 = 0x00001243,
+                Field2 = 0x00000010,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.977448f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.2111764f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 2943.416f,
+                            Field1 = 2819.508f,
+                            Field2 = 23.84636f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x00001243,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0000DBD3,
+                Field13 = 0x0000008A,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x7809004D,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x7809004D,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x7809004D,
+                Field1 = 0x00000000,
+            }, buffer);
+
+            SendMessage(new AttributesSetValuesMessage()
+            {
+                Id = 0x004D,
+                Field0 = 0x7809004D,
+                atKeyVals = new NetAttributeKeyValue[4]
+    {
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x000FFFFF,
+            Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Field0 = 0x0001F96A,
+            Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+            Int = 0x00000001,
+            Float = 0f,
+         },
+         new NetAttributeKeyValue()
+         {
+            Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+            Int = 0x00000000,
+            Float = 0f,
+         },
+    },
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x7809004D,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x7809004D,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x7809004D,
+                Field1 = 0.4255699f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x781C0060
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x781C0060,
+                Field1 = 0x0002B273,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3020.224f,
+                            Field1 = 2861.322f,
+                            Field2 = 23.94533f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0002B273,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0002B900,
+                Field13 = 0x00000005,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x781C0060,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x781C0060,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x781C0060,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x781C0060,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x781C0060,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x781C0060,
+                Field1 = 0f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region ACDEnterKnown 0x781E0062
+            SendMessage(new ACDEnterKnownMessage()
+            {
+                Id = 0x003B,
+                Field0 = 0x781E0062,
+                Field1 = 0x0002B28B,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+                Field4 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.3870942f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9220403f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3026.482f,
+                            Field1 = 2856.695f,
+                            Field2 = 23.94533f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+                Field5 = null,
+                Field6 = new GBHandle()
+                {
+                    Field0 = -1,
+                    Field1 = -1,
+                },
+                Field7 = 0x00000001,
+                Field8 = 0x0002B28B,
+                Field9 = 0x00000000,
+                Field10 = 0x00,
+                Field12 = 0x0002B900,
+                Field13 = 0x00000007,
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x781E0062,
+                Field1 = 0x00000001,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new AffixMessage()
+            {
+                Id = 0x0048,
+                Field0 = 0x781E0062,
+                Field1 = 0x00000002,
+                aAffixGBIDs = new int[0]
+    {
+    },
+            }, buffer);
+
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x781E0062,
+                Field1 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new ACDGroupMessage()
+            {
+                Id = 0x00B8,
+                Field0 = 0x781E0062,
+                Field1 = -1,
+                Field2 = -1,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x003E,
+                Field0 = 0x781E0062,
+            }, buffer);
+
+            SendMessage(new ACDTranslateFacingMessage()
+            {
+                Id = 0x0070,
+                Field0 = 0x781E0062,
+                Field1 = 3.936559f,
+                Field2 = false,
+            }, buffer);
+            #endregion
+            #region SNONameData
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x00008243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x00008244,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x00008245,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x0000823E,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x00000770,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x0000823F,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x00008239,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x0000823A,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x000160A7,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000021,
+                    Field1 = 0x0000824D,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000157E,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000018A8,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000192A,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001FD60,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00032361,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000157E,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000155A,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001224,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00019527,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00018B03,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000227BE,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000157E,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0000155A,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000261CF,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00013871,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B875,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000250CC,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001B186,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00021463,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000228C4,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001B603,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001E345,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001E344,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001E343,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0001E342,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002EC04,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B281,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B284,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B289,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B27C,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B28B,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B273,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B278,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B28B,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00026989,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002B27B,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00014A3E,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000341A5,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000341A6,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x0002AEA4,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x00001243,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000314B7,
+                },
+            }, buffer);
+
+            SendMessage(new SNONameDataMessage()
+            {
+                Id = 0x00D3,
+                Field0 = new SNOName()
+                {
+                    Field0 = 0x00000001,
+                    Field1 = 0x000314B8,
+                },
+            }, buffer);
+            #endregion
+            #region Set individual attributes of 0x789700DB
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789700DB,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789700DB,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789700DB,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789700DB,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789700DB,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789700DB
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789700DB,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.11f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9330626f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.3597142f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3108.125f,
+                            Field1 = 2882.163f,
+                            Field2 = 64.49878f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Set Individual Attributes of 0x789800DC
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789800DC,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789800DC,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789800DC,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789800DC,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789800DC,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789800DC
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789800DC,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.05940768f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9982339f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3143.104f,
+                            Field1 = 2829.936f,
+                            Field2 = 59.07556f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Set individual attributes of 0x789900DD
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789900DD,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789900DD,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789900DD,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789900DD,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789900DD,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPositionMessage 0x789900DD
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789900DD,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9878305f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.1555345f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3109.516f,
+                            Field1 = 2803.876f,
+                            Field2 = 59.07428f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Attributes 0x789A00DE
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789A00DE,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789A00DE,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789A00DE,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789A00DE,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789A00DE,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789A00DE
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789A00DE,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.7652696f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.6437099f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3113.659f,
+                            Field1 = 2803.692f,
+                            Field2 = 73.26618f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Attributes 0x789B00DF
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789B00DF,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789B00DF,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789B00DF,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789B00DF,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789B00DF,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789B00DF
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789B00DF,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.9976531f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0.009601643f,
+                                Field1 = -0.0006524475f,
+                                Field2 = -0.06779216f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3127.913f,
+                            Field1 = 2830.662f,
+                            Field2 = 59.07558f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Attributes 0x789C00E0
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789C00E0,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789C00E0,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789C00E0,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789C00E0,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789C00E0,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789C00E0
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789C00E0,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.4954694f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = -0.8686254f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3120.037f,
+                            Field1 = 2864.345f,
+                            Field2 = 59.07556f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Attributes 0x789E00E2
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x0000CE11,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x007F], // Casting_Speed_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000003,
+                    Attribute = GameAttribute.Attributes[0x0061], // Resource_Max_Total 
+                    Int = 0x43480000,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x009D], // Damage_Weapon_Min_Total_All 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x007D], // Casting_Speed 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x0000CE11,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x005C], // Resource_Type_Primary 
+                    Int = 0x00000003,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x007B], // Movement_Scalar_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x02BA], // IsTrialActor 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000FFFFF,
+                    Attribute = GameAttribute.Attributes[0x01B9], // Buff_Visual_Effect 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0099], // Damage_Weapon_Delta_Total_All 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0079], // Movement_Scalar_Capped_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x01F8], // SkillKit 
+                    Int = 0x00008AFA,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0078], // Movement_Scalar_Subtotal 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00033C40,
+                    Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00D7], // Immobolize 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00D6], // Untargetable 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000076B7,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 76f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000076B7,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000003,
+                    Attribute = GameAttribute.Attributes[0x006B], // Resource_Effective_Max 
+                    Int = 0x00000000,
+                    Float = 200f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0074], // Running_Rate_Total 
+                    Int = 0x00000000,
+                    Float = 0.3598633f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x018B], // Damage_Weapon_Min_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 40f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0073], // Walking_Rate_Total 
+                    Int = 0x00000000,
+                    Float = 0.2797852f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000006DF,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x0000CE11,
+                    Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x01D2], // CantStartDisplayedPowers 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000216FA,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000176C4,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x018D], // Damage_Weapon_Delta_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000216FA,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000176C4,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x008E], // Damage_Delta_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0050], // Hitpoints_Total_From_Vitality 
+                    Int = 0x00000000,
+                    Float = 36f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000006DF,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0070], // Running_Rate 
+                    Int = 0x00000000,
+                    Float = 0.3598633f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004F], // Hitpoints_Factor_Vitality 
+                    Int = 0x00000000,
+                    Float = 4f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0190], // Damage_Weapon_Min_Total_CurrentHand 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x006F], // Walking_Rate 
+                    Int = 0x00000000,
+                    Float = 0.2797852f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x018F], // Attacks_Per_Second_Item_CurrentHand 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x0000CE11,
+                    Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000000DE,
+                    Attribute = GameAttribute.Attributes[0x003C], // Resistance 
+                    Int = 0x00000000,
+                    Float = 0.5f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0091], // Damage_Min_Total 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0191], // Damage_Weapon_Delta_Total_CurrentHand 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x006E], // Movement_Scalar 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004E], // Hitpoints_Factor_Level 
+                    Int = 0x00000000,
+                    Float = 4f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 76f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0092], // Damage_Min_Subtotal 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x024C], // Disabled 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x012C], // Hidden 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x000C], // Defense 
+                    Int = 0x00000000,
+                    Float = 10f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000000DE,
+                    Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+                    Int = 0x00000000,
+                    Float = 0.5f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00033C40,
+                    Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0094], // Damage_Weapon_Delta 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x000B], // Vitality 
+                    Int = 0x00000000,
+                    Float = 9f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x000A], // Precision 
+                    Int = 0x00000000,
+                    Float = 11f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00007545,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0095], // Damage_Weapon_Delta_SubTotal 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0009], // Attack 
+                    Int = 0x00000000,
+                    Float = 10f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00007545,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0189], // Attacks_Per_Second_Item_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0096], // Damage_Weapon_Max 
+                    Int = 0x00000000,
+                    Float = 3f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0089], // Attacks_Per_Second_Total 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0108], // Projectile_Speed 
+                    Int = 0x00000000,
+                    Float = 3.051758E-05f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C8], // Get_Hit_Recovery 
+                    Int = 0x00000000,
+                    Float = 6f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00A8], // Crit_Percent_Cap 
+                    Int = 0x3F400000,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0008], // Shared_Stash_Slots 
+                    Int = 0x0000000E,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0097], // Damage_Weapon_Max_Total 
+                    Int = 0x00000000,
+                    Float = 3f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0027], // Level_Cap 
+                    Int = 0x0000000D,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0098], // Damage_Weapon_Delta_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C7], // Get_Hit_Recovery_Per_Level 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0087], // Attacks_Per_Second 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0187], // Attacks_Per_Second_Item_MainHand 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0007], // Backpack_Slots 
+                    Int = 0x0000003C,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0046], // Loading 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0086], // Attacks_Per_Second_Item_Total 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C6], // Get_Hit_Recovery_Base 
+                    Int = 0x00000000,
+                    Float = 5f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00007780,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00033C40,
+                    Attribute = GameAttribute.Attributes[0x01BE], // Buff_Icon_End_Tick0 
+                    Int = 0x000003FB,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0045], // Invulnerable 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x0000CE11,
+                    Attribute = GameAttribute.Attributes[0x027B], // Trait 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C5], // Get_Hit_Max 
+                    Int = 0x00000000,
+                    Float = 60f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00007780,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x009B], // Damage_Weapon_Min 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C4], // Get_Hit_Max_Per_Level 
+                    Int = 0x00000000,
+                    Float = 10f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0103], // General_Cooldown 
+                    Int = 0x00000000,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000226,
+                    Attribute = GameAttribute.Attributes[0x003E], // Resistance_Total 
+                    Int = 0x00000000,
+                    Float = 0.5f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x009C], // Damage_Weapon_Min_Total 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x00C3], // Get_Hit_Max_Base 
+                    Int = 0x00000000,
+                    Float = 50f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000002,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000FFFFF,
+                    Attribute = GameAttribute.Attributes[0x0042], // Skill_Total 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0022], // Experience_Next 
+                    Int = 0x000004B0,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000003,
+                    Attribute = GameAttribute.Attributes[0x005E], // Resource_Cur 
+                    Int = 0x43480000,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x000FFFFF,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00033C40,
+                    Attribute = GameAttribute.Attributes[0x01BA], // Buff_Icon_Start_Tick0 
+                    Int = 0x00000077,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0081], // Hit_Chance 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0021], // Experience_Granted 
+                    Int = 0x000003E8,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000226,
+                    Attribute = GameAttribute.Attributes[0x003C], // Resistance 
+                    Int = 0x00000000,
+                    Float = 0.5f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000003,
+                    Attribute = GameAttribute.Attributes[0x005F], // Resource_Max 
+                    Int = 0x00000000,
+                    Float = 200f,
+                },
+            }, buffer);
+            #endregion
+            #region VisualInventoryMessage 0x789E00E2
+            SendMessage(new VisualInventoryMessage()
+            {
+                Id = 0x004E,
+                Field0 = 0x789E00E2,
+                Field1 = new VisualEquipment()
+                {
+                    Field0 = new VisualItem[8]
+        {
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = 0x49B51827,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = -1,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+             new VisualItem()
+             {
+                Field0 = -1,
+                Field1 = 0x00000000,
+                Field2 = 0x00000000,
+                Field3 = 0x00000000,
+             },
+        },
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x789E00E2
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x789E00E2,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1.43f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 0.05940768f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9982339f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3143.75f,
+                            Field1 = 2828.75f,
+                            Field2 = 59.07559f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region ACDCollFlags 0x789E00E2
+            SendMessage(new ACDCollFlagsMessage()
+            {
+                Id = 0x00A6,
+                Field0 = 0x789E00E2,
+                Field1 = 0x00000000,
+            }, buffer);
+            #endregion
+            #region Item 0x789F00E3
+            #region Attributes 0x789F00E3
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x009D], // Damage_Weapon_Min_Total_All 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0099], // Damage_Weapon_Delta_Total_All 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0117], // Item_Equipped 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0115], // Item_Quality_Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x018B], // Damage_Weapon_Min_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0113], // Durability_Max 
+                    Int = 0x00000190,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x018D], // Damage_Weapon_Delta_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0112], // Durability_Cur 
+                    Int = 0x00000190,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0094], // Damage_Weapon_Delta 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0095], // Damage_Weapon_Delta_SubTotal 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0096], // Damage_Weapon_Max 
+                    Int = 0x00000000,
+                    Float = 3f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0189], // Attacks_Per_Second_Item_Total_MainHand 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0097], // Damage_Weapon_Max_Total 
+                    Int = 0x00000000,
+                    Float = 3f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0187], // Attacks_Per_Second_Item_MainHand 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x0098], // Damage_Weapon_Delta_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00007780,
+                    Attribute = GameAttribute.Attributes[0x0041], // Skill 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0086], // Attacks_Per_Second_Item_Total 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0125], // Seed 
+                    Int = unchecked((int)0xED34A51F),
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0124], // IdentifyCost 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0084], // Attacks_Per_Second_Item_Subtotal 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x009B], // Damage_Weapon_Min 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Field0 = 0x00000000,
+                    Attribute = GameAttribute.Attributes[0x009C], // Damage_Weapon_Min_Total 
+                    Int = 0x00000000,
+                    Float = 2f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789F00E3,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0082], // Attacks_Per_Second_Item 
+                    Int = 0x00000000,
+                    Float = 1.199219f,
+                },
+            }, buffer);
+            #endregion
+
+            SendMessage(new PlayEffectMessage()
+            {
+                Id = 0x007A,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00000027,
+            }, buffer);
+            SendMessage(new ACDInventoryPositionMessage()
+            {
+                Id = 0x0040,
+                Field0 = 0x789F00E3,
+                Field1 = new InventoryLocationMessageData()
+                {
+                    Field0 = 0x789E00E2,
+                    Field1 = 0x00000004,
+                    Field2 = new IVector2D()
+                    {
+                        Field0 = 0x00000000,
+                        Field1 = 0x00000000,
+                    },
+                },
+                Field2 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new ACDInventoryUpdateActorSNO()
+            {
+                Id = 0x0041,
+                Field0 = 0x789F00E3,
+                Field1 = 0x00001025,
+            }, buffer);
+            #endregion
+            #region Item 0x789F00E4
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78A000E4,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0115], // Item_Quality_Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78A000E4,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0052], // Hitpoints_Granted 
+                    Int = 0x00000000,
+                    Float = 100f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78A000E4,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0125], // Seed 
+                    Int = unchecked((int)0x884DCD35),
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78A000E4,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0121], // ItemStackQuantityLo 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new PlayEffectMessage()
+            {
+                Id = 0x007A,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00000027,
+            }, buffer);
+
+            SendMessage(new ACDInventoryPositionMessage()
+            {
+                Id = 0x0040,
+                Field0 = 0x78A000E4,
+                Field1 = new InventoryLocationMessageData()
+                {
+                    Field0 = 0x789E00E2,
+                    Field1 = 0x00000000,
+                    Field2 = new IVector2D()
+                    {
+                        Field0 = 0x00000000,
+                        Field1 = 0x00000000,
+                    },
+                },
+                Field2 = 0x00000001,
+            }, buffer);
+
+            SendMessage(new ACDInventoryUpdateActorSNO()
+            {
+                Id = 0x0041,
+                Field0 = 0x78A000E4,
+                Field1 = 0x00001158,
+            }, buffer);
+            #endregion
+            #region Attributes 0x78DD0118
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DD0118,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DD0118,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DD0118,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DD0118,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DD0118,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x78DD0118
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x78DD0118,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = -0.01089788f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0.9999406f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3125.888f,
+                            Field1 = 2602.642f,
+                            Field2 = 1.050535f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region Attributes 0x78DE0119
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DE0119,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0056], // Hitpoints_Max_Total 
+                    Int = 0x00000000,
+                    Float = 1f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DE0119,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0054], // Hitpoints_Max 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DE0119,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x004D], // Hitpoints_Cur 
+                    Int = 0x00000000,
+                    Float = 0.0009994507f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DE0119,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0026], // Level 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x78DE0119,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x0043], // TeamID 
+                    Int = 0x00000001,
+                    Float = 0f,
+                },
+            }, buffer);
+            #endregion
+            #region ACDWorldPosition 0x78DE0119
+            SendMessage(new ACDWorldPositionMessage()
+            {
+                Id = 0x003F,
+                Field0 = 0x78DE0119,
+                Field1 = new WorldLocationMessageData()
+                {
+                    Field0 = 1f,
+                    Field1 = new PRTransform()
+                    {
+                        Field0 = new Quaternion()
+                        {
+                            Field0 = 1f,
+                            Field1 = new Vector3D()
+                            {
+                                Field0 = 0f,
+                                Field1 = 0f,
+                                Field2 = 0f,
+                            },
+                        },
+                        Field1 = new Vector3D()
+                        {
+                            Field0 = 3083.982f,
+                            Field1 = 2603.142f,
+                            Field2 = 0.4151611f,
+                        },
+                    },
+                    Field2 = 0x772E0000,
+                },
+            }, buffer);
+            #endregion
+            #region TrickleMessage 0x789E00E2
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x789E00E2,
+                Field1 = 0x00001271,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 3143.75f,
+                        Field1 = 2828.75f,
+                        Field2 = 59.07559f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field3 = 0x00000000,
+                Field4 = 0x00026186,
+                Field5 = 1f,
+                Field6 = 0x00000001,
+                Field7 = 0x0000002C,
+                Field10 = unchecked((int)0x8DFA5D13),
+                Field12 = 0x0000F063,
+            }, buffer);
+            #endregion
+            #region TrickleMessage 0x0042
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77BF0003,
+                Field1 = 0x0000176E,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2820.838f,
+                        Field1 = 2912.305f,
+                        Field2 = 33.09947f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xC206AF3C),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77C50009,
+                Field1 = 0x0001FD60,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2970.619f,
+                        Field1 = 2789.915f,
+                        Field2 = 23.94531f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 0.001f,
+                Field6 = 0x0000000B,
+                Field7 = 0x00000020,
+                Field9 = 0x000315F2,
+                Field10 = 0x00BEA005,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77C6000A,
+                Field1 = 0x00032361,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2847.292f,
+                        Field1 = 2845.497f,
+                        Field2 = 23.90378f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x4167BF66,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77C8000C,
+                Field1 = 0x0000176E,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2857.057f,
+                        Field1 = 2913.271f,
+                        Field2 = 33.15442f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xC206AF3C),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77D00014,
+                Field1 = 0x00001224,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 3009.983f,
+                        Field1 = 2855.779f,
+                        Field2 = 23.85921f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0x9B392F4F),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77E00024,
+                Field1 = 0x000227BE,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2884.539f,
+                        Field1 = 2799.291f,
+                        Field2 = 23.94533f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x52AB3C27,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77E30027,
+                Field1 = 0x00001772,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2847.094f,
+                        Field1 = 2925.771f,
+                        Field2 = 24.30022f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x000316CE,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xE8AAA9EB),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77E40028,
+                Field1 = 0x00001772,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2861.172f,
+                        Field1 = 2935.073f,
+                        Field2 = 24.02267f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x000316CE,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xE8AAA9EB),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77F40038,
+                Field1 = 0x000250CC,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2972.107f,
+                        Field1 = 2869.526f,
+                        Field2 = 23.93186f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x5FD00378,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x77F50039,
+                Field1 = 0x0001B186,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2979.583f,
+                        Field1 = 2867.992f,
+                        Field2 = 24.00022f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x4C11D859,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78000044,
+                Field1 = 0x000228C4,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 3022.005f,
+                        Field1 = 2778.869f,
+                        Field2 = 23.94533f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xA8D02EDD),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78B000F4,
+                Field1 = 0x00032A7B,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2856.255f,
+                        Field1 = 2547.737f,
+                        Field2 = 0.4998169f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xAB714BBD),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78B200F6,
+                Field1 = 0x00032A7B,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2873.099f,
+                        Field1 = 2551.124f,
+                        Field2 = 0.4997787f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = unchecked((int)0xAB714BBD),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78B500F9,
+                Field1 = 0x00014A3E,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2993.154f,
+                        Field1 = 2593.221f,
+                        Field2 = 0.5345764f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x2E91310B,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78B600FA,
+                Field1 = 0x00014A40,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2900.319f,
+                        Field1 = 2574.399f,
+                        Field2 = 0.4997864f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x2E91310C,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78BE0102,
+                Field1 = 0x0001B186,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 3007.198f,
+                        Field1 = 2712.854f,
+                        Field2 = 23.76516f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x4C11D859,
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78C40108,
+                Field1 = 0x0002AEA4,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 2982.698f,
+                        Field1 = 2600.461f,
+                        Field2 = 0.4997864f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x0000002C,
+                Field10 = unchecked((int)0xDCEFA44D),
+                Field12 = 0x0000F063,
+                Field13 = 225f,
+            }, buffer);
+
+            SendMessage(new TrickleMessage()
+            {
+                Id = 0x0042,
+                Field0 = 0x78DF011A,
+                Field1 = 0x000255BB,
+                Field2 = new WorldPlace()
+                {
+                    Field0 = new Vector3D()
+                    {
+                        Field0 = 3131.338f,
+                        Field1 = 2597.316f,
+                        Field2 = 0.9298096f,
+                    },
+                    Field1 = 0x772E0000,
+                },
+                Field4 = 0x00004DEB,
+                Field5 = 1f,
+                Field6 = 0x00000008,
+                Field7 = 0x00000024,
+                Field10 = 0x0AF96544,
+                Field12 = 0x0000F063,
+            }, buffer);
+            #endregion
+            #region ANNDataMessage 0x0043
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x788500C9,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x788700CB,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77C40008,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77C7000B,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77CD0011,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77E50029,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77EA002E,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x77EE0032,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78120056,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78140058,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78B800FC,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78BF0103,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78C00104,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78C10105,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78C30107,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78D80113,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78D90114,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78DA0115,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78DB0116,
+            }, buffer);
+
+            SendMessage(new ANNDataMessage()
+            {
+                Id = 0x0043,
+                Field0 = 0x78DC0117,
+            }, buffer);
+            #endregion
+            SendMessage(new DWordDataMessage() // TICK
+            {
+                Id = 0x0089,
+                Field0 = 0x00000077,
+            }, buffer);
+
+            FlushOutgoingBuffer(buffer, connection);
+
+            SendMessage(new AttributeSetValueMessage()
+            {
+                Id = 0x004C,
+                Field0 = 0x789E00E2,
+                Field1 = new NetAttributeKeyValue()
+                {
+                    Attribute = GameAttribute.Attributes[0x005B], // Hitpoints_Healed_Target
+                    Int = 0x00000000,
+                    Float = 76f,
+                },
+            }, buffer);
+
+            SendMessage(new DWordDataMessage() // TICK
+            {
+                Id = 0x0089,
+                Field0 = 0x0000007D,
+            }, buffer);
+
+            FlushOutgoingBuffer(buffer, connection);
+        }
+
+        public static void SimpleMessage(GameMessage _msg, GameBitBuffer buffer, IConnection connection)
+        {
+            var msg = (SimpleMessage)_msg;
+
+            switch (msg.Id)
+            {
+                case 0x0030: // Sent with DwordDataMessage(0x0125, Value:0) and SimpleMessage(0x0125)
+                    {
+                        #region hardcoded1
+                        #region HirelingInfo
+                        SendMessage(new HirelingInfoUpdateMessage()
+                        {
+                            Id = 0x009D,
+                            Field0 = 0x00000001,
+                            Field1 = false,
+                            Field2 = -1,
+                            Field3 = 0x00000000,
+                        }, buffer);
+
+                        SendMessage(new HirelingInfoUpdateMessage()
+                        {
+                            Id = 0x009D,
+                            Field0 = 0x00000002,
+                            Field1 = false,
+                            Field2 = -1,
+                            Field3 = 0x00000000,
+                        }, buffer);
+
+                        SendMessage(new HirelingInfoUpdateMessage()
+                        {
+                            Id = 0x009D,
+                            Field0 = 0x00000003,
+                            Field1 = false,
+                            Field2 = -1,
+                            Field3 = 0x00000000,
+                        }, buffer);
+                        #endregion
+                        #region Attribute Values 0x789E00E2
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x000FFFFF,
+                                Attribute = GameAttribute.Attributes[0x015B], // Banter_Cooldown
+                                Int = 0x000007C9,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00020CBE,
+                                Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active
+                                Int = 0x00000001,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00033C40,
+                                Attribute = GameAttribute.Attributes[0x01CC], // Buff_Active
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x00D7], // Immobolize
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x00D6], // Untargetable
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x01D2], // CantStartDisplayedPowers
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00020CBE,
+                                Attribute = GameAttribute.Attributes[0x01BA], // Buff_Icon_Start_Tick0
+                                Int = 0x000000C1,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x024C], // Disabled
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x012C], // Hidden
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00033C40,
+                                Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00020CBE,
+                                Attribute = GameAttribute.Attributes[0x01BE], // Buff_Icon_End_Tick0
+                                Int = 0x000007C9,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x0046], // Loading
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00033C40,
+                                Attribute = GameAttribute.Attributes[0x01BE], // Buff_Icon_End_Tick0
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Attribute = GameAttribute.Attributes[0x0045], // Invulnerable
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00020CBE,
+                                Attribute = GameAttribute.Attributes[0x0230], // Buff_Icon_Count0
+                                Int = 0x00000001,
+                                Float = 0f,
+                            },
+                        }, buffer);
+
+                        SendMessage(new AttributeSetValueMessage()
+                        {
+                            Id = 0x004C,
+                            Field0 = 0x789E00E2,
+                            Field1 = new NetAttributeKeyValue()
+                            {
+                                Field0 = 0x00033C40,
+                                Attribute = GameAttribute.Attributes[0x01BA], // Buff_Icon_Start_Tick0
+                                Int = 0x00000000,
+                                Float = 0f,
+                            },
+                        }, buffer);
+                        #endregion
+
+                        SendMessage(new ACDCollFlagsMessage()
+                        {
+                            Id = 0x00A6,
+                            Field0 = 0x789E00E2,
+                            Field1 = 0x00000008,
+                        }, buffer);
+
+                        SendMessage(new DWordDataMessage()
+                        {
+                            Id = 0x0089,
+                            Field0 = 0x000000C1,
+                        }, buffer);
+                        #endregion
+                        FlushOutgoingBuffer(buffer, connection);
+                        #region hardcoded2
+                        SendMessage(new TrickleMessage()
+                        {
+                            Id = 0x0042,
+                            Field0 = 0x789E00E2,
+                            Field1 = 0x00001271,
+                            Field2 = new WorldPlace()
+                            {
+                                Field0 = new Vector3D()
+                                {
+                                    Field0 = 3143.75f,
+                                    Field1 = 2828.75f,
+                                    Field2 = 59.07559f,
+                                },
+                                Field1 = 0x772E0000,
+                            },
+                            Field3 = 0x00000000,
+                            Field4 = 0x00026186,
+                            Field5 = 1f,
+                            Field6 = 0x00000001,
+                            Field7 = 0x00000024,
+                            Field10 = unchecked((int)0x8DFA5D13),
+                            Field12 = 0x0000F063,
+                        }, buffer);
+
+                        SendMessage(new DWordDataMessage()
+                        {
+                            Id = 0x0089,
+                            Field0 = 0x000000D1,
+                        }, buffer);
+                        #endregion
+                        FlushOutgoingBuffer(buffer, connection);
+                    }
                     break;
                 default:
-                    Logger.Debug("Unknown opCode [0x{0}]", header.opCode.ToString("x2"));
-                    break;
+                    throw new NotImplementedException();
             }
-
-        }
-
-        private static void SendResponse(IConnection client, byte opCode, byte Flags, MemoryStream message)
-        {
-            UInt32 length = (uint)message.Length + 6;
-            var packet = new GamePacket(
-                new GameHeader(length, opCode, Flags), message.ToArray());
-            //Logger.Debug("S->C: {0}", packet.ToString());
-            client.Send(packet.GetRawPacketData());
-        }
-
-        /// we first welcome the client
-        private static void WelcomeClient(IConnection connection, GamePacket packet)
-        {
-            // protocol data + game version - Patch2 (0.3.07318)
-            //var welcome = new byte[] { 0x00, 0x00, 0x00, 0x18, 0x06, 0xe1, 0x3e, 0xc2, 0xde, 0x20, 0xf7, 0x70, 0x46, 0x15, 0x30 , 0x2e, 0x33, 0x2e, 0x30, 0x2e, 0x37, 0x33, 0x33, 0x33 };
-
-            // protocol data + game version - Patch3
-            var welcome = new byte[] { 0x00, 0x00, 0x00, 0x18, 0x06, 0x0d, 0xaf, 0x12, 0x62, 0x21, 0xf7, 0x70, 0x46, 0x15, 0x30, 0x2e, 0x33, 0x2e, 0x30, 0x2e, 0x37, 0x33, 0x33, 0x33 };
-            connection.Send(welcome);
-
-            // i guess this is kinda map data or so.
-            var hardcoded1 = new byte[] { 0x00, 0x00, 0x43, 0x7d, 0x17, 0x40, 0xbb, 0x91, 0xa1, 0xe6, 0x07, 0xd8, 0x5b, 0x1c, 0x0f, 0x00, 0x00, 0x03, 0x37, 0xc5, 0xff, 0xff, 0xff, 0x3f, 0xc6, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xa8, 0x00, 0x4d, 0x03, 0x00, 0x15, 0x69, 0xf4, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x4f, 0x14, 0x00, 0x02, 0xad, 0x94, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x93, 0x00, 0x01, 0x19, 0x9f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x48, 0x04, 0x00, 0x23, 0x33, 0xff, 0xff, 0xff, 0xff, 0xbf, 0xf0, 0x00, 0x00, 0x48, 0x03, 0x00, 0x11, 0xa1, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x4f, 0x14, 0x00, 0x02, 0x34, 0x9d, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x93, 0x00, 0x01, 0x19, 0x7d, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x48, 0x04, 0x00, 0x23, 0x2f, 0xfd, 0xff, 0xff, 0xff, 0xbf, 0xf0, 0x00, 0x00, 0x48, 0x03, 0x00, 0x11, 0xc2, 0xf2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x4f, 0x14, 0x00, 0x02, 0x38, 0xa2, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x95, 0x00, 0x01, 0x56, 0x94, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x4a, 0x01, 0x00, 0x8c, 0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x4a, 0x01, 0x00, 0x46, 0x67, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x05, 0x00, 0x23, 0x43, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x05, 0x00, 0x11, 0x97, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x15, 0x00, 0x08, 0xcb, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x15, 0x00, 0x04, 0x65, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x15, 0x00, 0x02, 0x38, 0xa2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0xff, 0xff, 0xff, 0xff, 0x20, 0xe6, 0xff, 0xff, 0xff, 0x3f, 0x31, 0xf6, 0xff, 0xff, 0xff, 0x1f, 0x32, 0xfe, 0xff, 0xff, 0xff, 0x0f, 0x66, 0xff, 0xff, 0xff, 0xff, 0x24, 0xe6, 0xff, 0xff, 0xff, 0x3f, 0x35, 0xf7, 0xff, 0xff, 0xff, 0x0f, 0x32, 0xff, 0xff, 0xff, 0xff, 0x07, 0x67, 0xff, 0xff, 0xff, 0xff, 0x22, 0x2b, 0x00, 0x00, 0x00, 0x00, 0x66, 0x00, 0x02, 0xed, 0x44, 0x30, 0x0b, 0x00, 0x00, 0x00, 0x24, 0x26, 0x00, 0x08, 0x5b, 0x3a, 0x19, 0x01, 0x00, 0x0b, 0x4e, 0x45, 0x57, 0x4d, 0x4f, 0x4e, 0x4b, 0x23, 0x33, 0x34, 0x39, 0xa3, 0x00, 0x00, 0x12, 0x71, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x17, 0x6c, 0xf4, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x07, 0x78, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x07, 0x78, 0xf0, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x21, 0x6f, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x6f, 0x22, 0x25, 0x6d, 0xf4, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xfc, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf3, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xcf, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5d, 0xb1, 0x00, 0x00, 0x85, 0xbe, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79, 0x27, 0x80, 0x38, 0x1a, 0x02, 0x00, 0x00, 0x02, 0x06, 0x08, 0x00, 0x12, 0x12, 0x08, 0x08, 0x10, 0x03, 0x18, 0x04, 0x20, 0x0b, 0x28, 0x14, 0x30, 0x07, 0x38, 0x0b, 0x40, 0x04, 0x48, 0x01, 0x76, 0x01, 0x00, 0x00, 0x05, 0x01, 0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x77, 0x00, 0x00, 0x00, 0x05, 0x01, 0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x77, 0x01, 0x00, 0x00, 0x05, 0x01, 0x18, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x57, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x74, 0xd9, 0xf0, 0x67, 0x2b, 0x44, 0xa0, 0x74, 0xce, 0x46, 0x82, 0xe0, 0xcb, 0xc0, 0x10, 0xba, 0x0f, 0x77, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xe6, 0x29, 0xc2, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0xb2, 0xbd, 0x4f, 0x4d, 0x89, 0xa6, 0xd5, 0x34, 0x8a, 0x55, 0x42, 0x73, 0x84, 0x28, 0x8b, 0x18, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0x2e, 0x9e, 0x3e, 0x8c, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x21, 0xb5, 0x8f, 0xf1, 0x42, 0xa0, 0x58, 0xf0, 0x40, 0xa5, 0x36, 0x7a, 0x40, 0x42, 0xfa, 0xfd, 0x72, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0x46, 0x41, 0x18, 0x38, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0x56, 0xf7, 0x83, 0x0d, 0x89, 0xfc, 0x3e, 0x76, 0x89, 0xbc, 0x1a, 0x28, 0x7f, 0x6f, 0x4e, 0x06, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0x22, 0x20, 0x01, 0x4e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x11, 0xfc, 0xcd, 0x0d, 0x41, 0xa0, 0xe9, 0x83, 0x45, 0xa3, 0x56, 0x01, 0x44, 0x3e, 0xe5, 0x56, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0x46, 0xe2, 0xf8, 0xd1, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0x69, 0x5b, 0xfc, 0x82, 0x50, 0x8a, 0x2d, 0xfc, 0x5d, 0x8a, 0xf7, 0x19, 0xf6, 0x81, 0x05, 0xb0, 0x36, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0xc2, 0x9c, 0x24, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x51, 0xf8, 0x1e, 0xe7, 0x46, 0x9b, 0x46, 0x62, 0x43, 0x76, 0x1e, 0x73, 0xc0, 0x12, 0x7b, 0x88, 0x71, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xe6, 0x29, 0xc2, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0x5d, 0x8a, 0x62, 0x6e, 0x8a, 0x19, 0xd2, 0x00, 0x88, 0xa4, 0x72, 0x04, 0x7b, 0xbe, 0x9c, 0x00, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0x2e, 0x7f, 0xa3, 0x7e, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0xf9, 0x17, 0x08, 0x8f, 0x45, 0x7a, 0xbe, 0xe4, 0x42, 0x8b, 0x88, 0x7d, 0x44, 0x30, 0xa7, 0xd3, 0x76, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xe6, 0x29, 0xc2, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0xea, 0x5e, 0x91, 0x51, 0x89, 0x64, 0x73, 0x76, 0x8a, 0x53, 0x8c, 0x25, 0x84, 0x60, 0x96, 0x04, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0xd0, 0x7c, 0xfc, 0x16, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x79, 0x3c, 0x1b, 0x5f, 0x41, 0xa7, 0x4b, 0x76, 0x40, 0xa6, 0x26, 0x04, 0x46, 0x38, 0xa9, 0xd7, 0x71, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x3f, 0x44, 0x01, 0x00, 0x1e, 0x0c, 0x93, 0xf3, 0x3e, 0xaf, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x40, 0x69, 0x12, 0xda, 0xc8, 0x3d, 0x89, 0x91, 0x6e, 0x10, 0x8a, 0xd3, 0x45, 0x3f, 0x84, 0x91, 0x45, 0x00, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0xc2, 0x9c, 0x24, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x01, 0x94, 0xdf, 0xaf, 0x44, 0xa1, 0x73, 0xe8, 0x43, 0x9c, 0x07, 0x33, 0x43, 0x1a, 0x7a, 0xd6, 0x74, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0x8e, 0x5b, 0xda, 0x1a, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0x00, 0x9a, 0xfd, 0x06, 0x8a, 0x12, 0x70, 0x27, 0x8b, 0x35, 0x93, 0x73, 0x83, 0x5d, 0x88, 0x7e, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0xc2, 0x9c, 0x24, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x09, 0x2f, 0x13, 0x8d, 0x47, 0x90, 0xdd, 0xe1, 0x45, 0xaa, 0x67, 0x1e, 0x46, 0x50, 0xa1, 0xf9, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xc6, 0x66, 0xa4, 0xf2, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xe9, 0x25, 0x07, 0x1b, 0x75, 0x87, 0x92, 0xf1, 0x74, 0x88, 0x4c, 0xa0, 0x04, 0x82, 0xfe, 0x39, 0x5c, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0xc2, 0x9c, 0x24, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x59, 0x46, 0x2c, 0x8f, 0x42, 0x91, 0x12, 0x33, 0x46, 0xaf, 0x48, 0x85, 0x47, 0x53, 0xe1, 0x71, 0x74, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xe6, 0x29, 0xc2, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0x69, 0x49, 0xea, 0xaf, 0x05, 0x8a, 0x10, 0x09, 0x62, 0x89, 0xe4, 0xeb, 0xdb, 0x80, 0xca, 0x6f, 0x53, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0xae, 0x15, 0xbd, 0xa1, 0x52, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x81, 0xe4, 0x64, 0x3f, 0x45, 0xa5, 0x9b, 0x52, 0x44, 0x9e, 0xda, 0xc3, 0xc6, 0x1d, 0xdb, 0xcc, 0x75, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0x86, 0xc6, 0x0b, 0x53, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0x69, 0xfc, 0x51, 0xe5, 0x1f, 0x8a, 0x1d, 0x85, 0x50, 0x8a, 0x3f, 0xaa, 0x38, 0x83, 0xbb, 0x7a, 0x0a, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x03, 0x1f, 0x30, 0x00, 0x01, 0x96, 0x2e, 0x84, 0x11, 0x83, 0x46, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x74, 0x89, 0x73, 0x11, 0xf9, 0x47, 0xa7, 0x63, 0x71, 0x46, 0xa5, 0xbc, 0x2b, 0x47, 0x38, 0x54, 0x0c, 0x73, 0xe5, 0xc0, 0x00, 0x00, 0x00, 0x31, 0xf6, 0x00, 0x00, 0x19, 0x65, 0xf6, 0x04, 0x2c, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x40, 0xa9, 0x1d, 0x77, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x11, 0x5e, 0x5e, 0x74, 0xb9, 0x70, 0x00, 0x00, 0x33, 0x8a, 0x88, 0xf8, 0x00, 0x8a, 0x61, 0x98, 0x00, 0x84, 0xd8, 0x9a, 0x67, 0xee, 0x5c, 0x00, 0x00, 0x00, 0x02, 0x2b, 0x6e, 0x34, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x00, 0x4d, 0xeb, 0x00, 0x02, 0x61, 0x86, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x02, 0x06, 0xf8, 0xff, 0xff, 0xff, 0xff, 0x00, 0x02, 0x73, 0x4f, 0x00, 0x01, 0x53, 0xf6, 0x00, 0x01, 0x32, 0x20, 0x00, 0x01, 0x15, 0xee, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x60, 0x42, 0xe7, 0xe0, 0xa0, 0x42, 0xfa, 0x84, 0x00, 0x42, 0x2f, 0x50, 0xae, 0x42, 0xf8, 0x1f, 0x80, 0x43, 0x03, 0xaa, 0x60, 0x42, 0x65, 0x13, 0xb2, 0x42, 0xe7, 0xe0, 0xa0, 0x42, 0xfa, 0x84, 0x00, 0x42, 0x2f, 0x50, 0xae, 0x42, 0xf8, 0x1f, 0x80, 0x43, 0x03, 0xaa, 0x60, 0x42, 0x65, 0x13, 0xb2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0xc8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x77, 0x56, 0x00, 0x02, 0x00, 0x00, 0x82, 0x45, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x3f, 0x40, 0x00, 0x45, 0x2c, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x22, 0x74, 0xd5, 0x80, 0x00, 0x02, 0x00, 0x20, 0x91, 0x3d, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4f, 0xd0, 0x00, 0x44, 0x4b, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x74, 0xcb, 0x80, 0x00, 0x08, 0x74, 0xdc, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2b, 0x00, 0x00, 0x00, 0x2e, 0x00, 0x0c, 0x5b, 0xce, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x01, 0x37, 0xeb, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x08, 0x6b, 0xf7, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x09, 0xcd, 0x0f, 0x00, 0x05, 0x4f, 0x36, 0x00, 0x04, 0xc8, 0x20, 0x00, 0x04, 0x57, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x01, 0x20, 0x00, 0x00, 0x01, 0x60, 0x0b, 0xbe, 0x9f, 0x60, 0x0b, 0xf3, 0x35, 0x70, 0x08, 0x44, 0x4f, 0x64, 0x0c, 0x0a, 0x89, 0x70, 0x0c, 0x02, 0x0b, 0x58, 0x08, 0x88, 0x0c, 0x58, 0x0b, 0xd7, 0x1e, 0x60, 0x0b, 0xf3, 0x35, 0x70, 0x08, 0x44, 0x4f, 0x64, 0x0c, 0x16, 0xc9, 0x50, 0x0c, 0x02, 0x0b, 0x58, 0x08, 0x88, 0x0c, 0x18, 0x00, 0x00, 0x0c, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x49, 0xdd, 0x50, 0x00, 0x00, 0x00, 0x02, 0x09, 0x03, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x14, 0x85, 0x00, 0x40, 0x14, 0xb2, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x44, 0x77, 0x54, 0x00, 0x00, 0x00, 0x00, 0x82, 0x43, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x21, 0x40, 0x00, 0x45, 0x2c, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x1a, 0x74, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x0f, 0x00, 0x00, 0x02, 0x0a, 0x00, 0x04, 0xde, 0xfb, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0xf0, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x20, 0x6f, 0xf8, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x27, 0x34, 0x0f, 0x00, 0x15, 0x3f, 0x06, 0x00, 0x13, 0x22, 0x00, 0x00, 0x11, 0x5e, 0x0e, 0x00, 0x00, 0x03, 0x06, 0x00, 0x00, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x07, 0x00, 0x00, 0x03, 0x0f, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x06, 0x40, 0x2f, 0x00, 0x9e, 0x40, 0x2f, 0xce, 0xa4, 0x40, 0x1d, 0xf2, 0x29, 0x40, 0x30, 0x0d, 0x6c, 0x40, 0x30, 0x54, 0x63, 0x40, 0x22, 0x55, 0x44, 0x4e, 0x2f, 0x00, 0x9e, 0x40, 0x2f, 0xce, 0xa4, 0x40, 0x1d, 0x34, 0x42, 0x44, 0x30, 0x0d, 0x6c, 0x40, 0x30, 0x54, 0x63, 0x40, 0x22, 0xb4, 0x38, 0x04, 0x00, 0x00, 0x93, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79, 0x78, 0xa0, 0x03, 0x06, 0x00, 0x08, 0x23, 0x3e, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x53, 0x04, 0x00, 0x40, 0x51, 0xd8, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x20, 0x44, 0xde, 0x28, 0x00, 0x36, 0x00, 0x02, 0x08, 0x3e, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x14, 0xc1, 0x00, 0x40, 0x14, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xdc, 0xb8, 0x00, 0x40, 0x1a, 0x74, 0xcb, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0c, 0x03, 0x00, 0x00, 0x0a, 0x02, 0x00, 0x13, 0x7a, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 0x00, 0x81, 0xbe, 0xfc, 0xff, 0xff, 0xff, 0x03, 0x00, 0x9c, 0xd3, 0x03, 0x00, 0x54, 0xfd, 0x02, 0x00, 0x4c, 0x88, 0x00, 0x00, 0x45, 0x7b, 0x02, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x0f, 0x03, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x18, 0x40, 0xb8, 0x11, 0x68, 0x40, 0xbd, 0x64, 0xec, 0x40, 0x67, 0x35, 0x4b, 0x40, 0xbf, 0xee, 0xa0, 0x40, 0xbd, 0x64, 0xec, 0x40, 0x83, 0xfa, 0xc5, 0x42, 0xb8, 0x11, 0x68, 0x40, 0xbd, 0x64, 0xec, 0x40, 0x67, 0x35, 0x4b, 0x40, 0xbf, 0xee, 0xa0, 0x40, 0xbd, 0x64, 0xec, 0x40, 0x83, 0xfa, 0xc5, 0x02, 0x00, 0x00, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x75, 0xe4, 0x00, 0x0f, 0x00, 0x00, 0x20, 0x8f, 0x3f, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4f, 0xd0, 0x00, 0x44, 0x47, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x20, 0x74, 0x79, 0x00, 0x03, 0x0c, 0x00, 0x08, 0x23, 0x3f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x53, 0xf4, 0x00, 0x40, 0x51, 0xd8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x70, 0x72, 0xe0, 0x00, 0x20, 0x34, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x26, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x02, 0x06, 0xf8, 0xff, 0xff, 0xff, 0xff, 0x00, 0x02, 0x73, 0x4f, 0x00, 0x01, 0x53, 0xf6, 0x00, 0x00, 0xc5, 0x75, 0x00, 0x01, 0x15, 0xee, 0x00, 0x00, 0x00, 0x89, 0x00, 0x00, 0x00, 0x89, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x60, 0x42, 0xef, 0xff, 0xe0, 0x42, 0xf0, 0x00, 0x68, 0xc0, 0xcf, 0x0c, 0xf5, 0x42, 0xf0, 0x00, 0x40, 0x42, 0xf0, 0x00, 0x68, 0x40, 0xdf, 0x0b, 0x37, 0x42, 0xef, 0xff, 0xe0, 0x42, 0xf0, 0x00, 0x68, 0xc0, 0xcf, 0x0c, 0xf7, 0x42, 0xf0, 0x00, 0x40, 0x42, 0xf0, 0x00, 0x68, 0x40, 0xdf, 0x0b, 0x39, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x77, 0xdd, 0x00, 0x89, 0x00, 0x00, 0x82, 0x3a, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x3f, 0x40, 0x00, 0x45, 0x0e, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x22, 0x74, 0xf7, 0x40, 0x22, 0x01, 0x00, 0x20, 0x8e, 0x3e, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4f, 0xd0, 0x00, 0x44, 0x43, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x74, 0xcb, 0x80, 0x00, 0x00, 0x7b, 0xe2, 0x78, 0x03, 0x22, 0x00, 0x00, 0x49, 0x71, 0x29, 0xfe, 0xdc, 0x28, 0x3d, 0xf5, 0xcd, 0x55, 0x37, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfd, 0xfe, 0x31, 0x41, 0x15, 0x11, 0xf0, 0x40, 0x14, 0xc3, 0x30, 0x40, 0x09, 0xb1, 0x35, 0x67, 0xdc, 0xb8, 0x00, 0x00, 0x09, 0x01, 0xed, 0x60, 0xf5, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x01, 0x50, 0x66, 0xc4, 0xf0, 0x07, 0x02, 0x00, 0x26, 0x79, 0x27, 0x80, 0x38, 0x3e, 0xfc, 0x32, 0xf1, 0x40, 0xcc, 0x07, 0xaa, 0x05, 0xc1, 0x07, 0x54, 0x15, 0x42, 0x00, 0x44, 0x0e, 0x3e, 0x00, 0x89, 0x0e, 0x2c, 0x57, 0x35, 0x06, 0xed, 0x37, 0x21, 0x06, 0xda, 0x37, 0x41, 0x01, 0x36, 0x1f, 0xc1, 0x0c, 0xe1, 0x71, 0x0c, 0xe9, 0x22, 0x5b, 0x3a, 0x42, 0x17, 0xb6, 0x04, 0x41, 0x00, 0x01, 0x15, 0xfa, 0x00, 0x01, 0x01, 0x39, 0x00, 0x38, 0x00, 0x06, 0x01, 0x00, 0x01, 0x81, 0x01, 0x01, 0x00, 0x27, 0x79, 0x27, 0x80, 0x38, 0x7e, 0x42, 0xdf, 0x12, 0x21, 0x5d, 0xb1, 0x10, 0x12, 0x03, 0x6f, 0x11, 0x0a, 0x00, 0xde, 0x0f, 0x04, 0x01, 0x5e, 0x1f, 0x30, 0x28, 0x47, 0x31, 0x06, 0xef, 0x00, 0x20, 0x31, 0x15, 0x3b, 0xc0, 0x10, 0x32, 0x04, 0x61, 0x03, 0x00, 0x00, 0x3e, 0x01, 0x00, 0x01, 0x3e, 0x00, 0x01, 0x01, 0x00, 0x39, 0x00, 0x38, 0x80, 0x50, 0x30, 0x20, 0xf0, 0x40, 0x8a, 0x00, 0x00, 0x59, 0x38, 0x00, 0x01, 0x49, 0x80, 0x52, 0x90, 0x04, 0x00, 0x08, 0x00, 0x20, 0x6d, 0xc4, 0xf0, 0x07, 0xe2, 0x03, 0x00, 0x02, 0x3e, 0x01, 0x00, 0x03, 0xbe, 0x00, 0x00, 0x04, 0x7e, 0x00, 0x00, 0x0d, 0x3e, 0x00, 0x01, 0x0e, 0x2e, 0x3e, 0xae, 0xfe, 0xff, 0x7f, 0xdc, 0x29, 0x18, 0x00, 0x01, 0x17, 0x0e, 0x00, 0x03, 0x17, 0x07, 0x00, 0x03, 0x30, 0x25, 0x2d, 0x99, 0x00, 0x00, 0x13, 0x68, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x38, 0xfa, 0x00, 0x00, 0x40, 0x1a, 0x40, 0x00, 0x60, 0x69, 0x40, 0x0d, 0x20, 0x00, 0x40, 0x80, 0x80, 0x3c, 0x00, 0x00, 0x00, 0x26, 0x79, 0x4f, 0x00, 0x71, 0x3e, 0x00, 0x00, 0x1b, 0xfb, 0xff, 0xff, 0x25, 0xfa, 0xff, 0xff, 0x24, 0xfd, 0xff, 0x7f, 0xc8, 0x60, 0x6f, 0x09, 0x22, 0x21, 0x47, 0x87, 0x20, 0x3e, 0x3c, 0x40, 0x6f, 0x22, 0x04, 0x82, 0x33, 0xe2, 0x60, 0x3a, 0x20, 0x5d, 0x48, 0x08, 0x00, 0x10, 0x00, 0x20, 0x00, 0x00, 0xf3, 0x0c, 0xf3, 0x0c, 0xf3, 0x0c, 0xf0, 0x00, 0xf3, 0x0c, 0xf3, 0x0c, 0x00, 0x00, 0x0f, 0x3b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x37, 0xf0, 0x00, 0x4d, 0xf1, 0x3c, 0x01, 0xe2, 0x17, 0x3f, 0x3e, 0x1d, 0x3b, 0x76, 0x33, 0x10, 0x12, 0x39, 0x3c, 0x1c, 0x06, 0x75, 0x1d, 0x04, 0x00, 0x00, 0xc5, 0x1d, 0x13, 0x00, 0x00, 0x62, 0x0d, 0x00, 0x01, 0x23, 0x06, 0x00, 0x02, 0x47, 0x02, 0x00, 0x03, 0x8e, 0x3c, 0x00, 0x3c, 0x00, 0x3c, 0x00, 0x00, 0x30, 0xc0, 0x30, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x30, 0x5c, 0x52, 0x00, 0x20, 0xa3, 0x3a, 0xf0, 0x40, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x26, 0x79, 0x27, 0x80, 0x38, 0x7e, 0x00, 0x00, 0x24, 0x2e, 0x00, 0x01, 0x21, 0x1e, 0x00, 0x03, 0x22, 0x0e, 0x00, 0x00, 0x23, 0x1a, 0x30, 0x00, 0x00, 0x65, 0x10, 0x00, 0x01, 0x64, 0x08, 0x00, 0x03, 0x64, 0x04, 0x00, 0x04, 0xc8, 0x02, 0x00, 0x45, 0x90, 0x01, 0x00, 0x66, 0x90, 0x00, 0x00, 0x60, 0x10, 0x37, 0x03, 0x00, 0x01, 0x91, 0x01, 0x00, 0x22, 0x91, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x3c, 0x80, 0x30, 0xb8, 0x0a, 0x00, 0x10, 0x00, 0x20, 0x00, 0x40, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x42, 0x00, 0x34, 0x1e, 0x06, 0x00, 0x08, 0x00, 0x20, 0x6d, 0xc4, 0xf0, 0x07, 0xe2, 0x03, 0x00, 0x03, 0x91, 0x01, 0x00, 0x24, 0x91, 0x00, 0x00, 0x25, 0x51, 0x00, 0x00, 0x26, 0x31, 0x00, 0x00, 0x65, 0x11, 0x00, 0x01, 0x64, 0x09, 0x00, 0x03, 0x64, 0x05, 0x00, 0x04, 0xc8, 0x03, 0x00, 0x45, 0x91, 0x01, 0x00, 0x66, 0x91, 0x00, 0x00, 0x20, 0x51, 0x00, 0x00, 0x60, 0x11, 0x6e, 0x01, 0x00, 0x21, 0x92, 0x00, 0x00, 0x22, 0x52, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x04, 0x00, 0x08, 0x00, 0x10, 0x00, 0x20, 0x00, 0x40, 0x00, 0x80, 0x00, 0x00, 0x41, 0x00, 0x3e, 0x00, 0x3c, 0x00, 0x04, 0x00, 0x08, 0x00, 0x20, 0x6d, 0xc4, 0xf0, 0x07, 0xe2, 0x03, 0x00, 0x03, 0x92, 0x01, 0x00, 0x24, 0x92, 0x00, 0x00, 0x25, 0x52, 0x00, 0x00, 0x26, 0x32, 0x00, 0x00, 0x24, 0x12, 0x00, 0x00, 0x24, 0x0c, 0x00, 0x00, 0x25, 0x05, 0x00, 0x00, 0x4b, 0x02, 0x00, 0x00, 0x97, 0x01, 0x00, 0x20, 0x98, 0x0c, 0xe1, 0x91, 0x7b, 0x00, 0x00, 0x20, 0x3b, 0x00, 0x00, 0x24, 0x1c, 0x67, 0x08, 0x11, 0x09, 0xce, 0x11, 0x10, 0x06, 0x00, 0x08, 0x00, 0x10, 0x00, 0x20, 0x00, 0x40, 0x80, 0x80, 0x3c, 0x00, 0x3d, 0x00, 0x42, 0x80, 0x44, 0x40, 0x38, 0xc0, 0x10, 0x42, 0x00, 0x44, 0x00, 0x00, 0x01, 0x00, 0x21, 0x7d, 0x89, 0xe0, 0x0e, 0xf2, 0x16, 0x14, 0x16, 0x2a, 0x14, 0x01, 0x50, 0x13, 0x13, 0x0e, 0x4d, 0x92, 0x14, 0x06, 0x22, 0x11, 0xf3, 0xff, 0xff, 0x11, 0xfa, 0xff, 0xff, 0x10, 0x0d, 0x9c, 0x91, 0x18, 0x68, 0x53, 0x40, 0xa2, 0x80, 0x00, 0x00, 0x51, 0x40, 0x46, 0x00, 0x44, 0x80, 0x58, 0x4c, 0x70, 0x03, 0x01, 0x00, 0x01, 0x00, 0x00, 0x21, 0x6d, 0xc4, 0xf0, 0x07, 0xe2, 0x48, 0x0c, 0x27, 0x09, 0x0a, 0x02, 0x21, 0x08, 0x00, 0x4c, 0x67, 0x88, 0x88, 0x10, 0x0b, 0x02, 0x02, 0x09, 0x04, 0x00, 0x47, 0x83, 0x0e, 0x02, 0x00, 0x00, 0x04, 0xb0, 0x00, 0x00, 0x03, 0xe8, 0x00, 0x00, 0x00, 0x00, 0x49, 0x00, 0x00, 0x00, 0x01, 0x48, 0x80, 0x49, 0x80, 0x49, 0x00, 0x07, 0x3c, 0x00, 0x00, 0x00, 0x00, 0x5c, 0x78, 0x27, 0x80, 0x38, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x13, 0xc0, 0x1c, 0x3a, 0x70, 0x89, 0xe0, 0x0e, 0x42, 0x04, 0x17, 0x41, 0x0c, 0x3d, 0x78, 0x4f, 0x00, 0x71, 0x26, 0x7a, 0x27, 0x80, 0x38, 0xfe, 0xff, 0xff, 0xff, 0x03, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0xc2, 0xff, 0xff, 0xff, 0x3f, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x49, 0x6d, 0x46, 0x09, 0x03, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0xc2, 0xff, 0xff, 0xff, 0x3f, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x1d, 0x79, 0x13, 0xc0, 0x1c, 0x42, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x71, 0x3b, 0x78, 0x97, 0x00, 0xdb, 0x00, 0x00, 0x17, 0x67, 0xb8, 0x3f, 0x8e, 0x14, 0x7a, 0x3f, 0x6e, 0xdd, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xb8, 0x2c, 0x75, 0x45, 0x42, 0x41, 0xfe, 0x45, 0x34, 0x22, 0x9a, 0x42, 0x80, 0xff, 0x60, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x2e, 0x67, 0x01, 0x10, 0x00, 0x09, 0x50, 0x24, 0x00, 0x00, 0x00, 0x00, 0x48, 0xf1, 0x2e, 0x01, 0x5b, 0x01, 0x48, 0x78, 0x97, 0x00, 0xdb, 0x02, 0x53, 0x78, 0x4b, 0x80, 0x6d, 0x01, 0x20, 0x4d, 0xe2, 0x5c, 0x03, 0x5b, 0x12, 0x16, 0x54, 0x14, 0x11, 0x0d, 0x21, 0x09, 0x36, 0xe0, 0x20, 0x50, 0x58, 0x00, 0x80, 0x14, 0x18, 0x02, 0x42, 0x78, 0xe2, 0x5c, 0x03, 0xdb, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xf1, 0x2e, 0x01, 0x5b, 0x70, 0x78, 0x97, 0x00, 0xdb, 0x3f, 0x3c, 0x66, 0xd1, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0xd9, 0x1f, 0x7b, 0x13, 0x00, 0x1b, 0x04, 0x00, 0x02, 0xaf, 0x47, 0x3d, 0xf0, 0x00, 0x00, 0x38, 0xae, 0x6a, 0xae, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x38, 0xef, 0xf1, 0x88, 0x41, 0xa8, 0x8e, 0x35, 0x43, 0xa6, 0x1b, 0xdf, 0x41, 0x4d, 0x89, 0xac, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0x5f, 0x07, 0x80, 0x00, 0x01, 0x2a, 0x04, 0x01, 0x00, 0x00, 0x00, 0x25, 0x78, 0x26, 0x00, 0x37, 0x04, 0x24, 0x78, 0x13, 0x00, 0x1b, 0x14, 0x50, 0x76, 0x89, 0x80, 0x0d, 0x0c, 0x00, 0x26, 0x79, 0x4c, 0x00, 0x6e, 0x0c, 0x56, 0x14, 0x14, 0x11, 0x26, 0x11, 0x03, 0xa6, 0x3c, 0x00, 0x15, 0x0c, 0x02, 0x00, 0x14, 0x83, 0x10, 0x02, 0x5c, 0x78, 0x4c, 0x00, 0x6e, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7a, 0x26, 0x00, 0x37, 0x38, 0x78, 0x13, 0x00, 0x1b, 0x44, 0x08, 0x2e, 0x83, 0x64, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0xab, 0x1f, 0x7b, 0xe2, 0x64, 0x03, 0x1d, 0x00, 0x08, 0x07, 0x65, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfd, 0xf3, 0x89, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7d, 0x11, 0x6d, 0x15, 0x09, 0x61, 0x43, 0x14, 0xbc, 0xf8, 0x46, 0x09, 0xb1, 0x30, 0x4f, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x10, 0x0f, 0x05, 0x01, 0x04, 0x00, 0x25, 0x40, 0x0c, 0x00, 0x00, 0x00, 0x22, 0x68, 0xc4, 0xc8, 0x06, 0x3d, 0x20, 0x48, 0xe2, 0x64, 0x03, 0x9d, 0x40, 0x26, 0xf1, 0x32, 0x01, 0x5d, 0x82, 0x21, 0x7d, 0x89, 0x90, 0x0d, 0x6d, 0x14, 0x16, 0x14, 0x28, 0x11, 0x0d, 0x43, 0x09, 0x3e, 0x80, 0x18, 0x41, 0x18, 0x00, 0x20, 0x50, 0x18, 0x02, 0x5a, 0x78, 0x89, 0x90, 0x0d, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xc4, 0xc8, 0x06, 0x3d, 0x70, 0xe2, 0x64, 0x03, 0x1d, 0xfa, 0x7f, 0xab, 0x16, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x01, 0xe5, 0x1d, 0x79, 0x4d, 0x00, 0x6f, 0x00, 0x00, 0x9c, 0x38, 0x51, 0x3f, 0xc0, 0x00, 0x00, 0xbe, 0xa1, 0xf4, 0x5b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x92, 0x65, 0x16, 0x44, 0xa1, 0x4d, 0x46, 0x44, 0x97, 0x9d, 0x89, 0x43, 0x49, 0x44, 0x24, 0x77, 0x97, 0x00, 0x00, 0x04, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x38, 0x71, 0x01, 0x20, 0x00, 0x04, 0xa8, 0x44, 0x00, 0x00, 0x00, 0x03, 0x48, 0x78, 0x9a, 0x00, 0xde, 0x01, 0x24, 0x78, 0x4d, 0x00, 0x6f, 0x04, 0x52, 0x7a, 0x26, 0x80, 0x37, 0x02, 0x01, 0x4d, 0xf1, 0x34, 0x01, 0x5e, 0x16, 0x16, 0x2a, 0x14, 0x01, 0x4d, 0x10, 0x0b, 0x26, 0xf0, 0x40, 0x28, 0x98, 0x00, 0x00, 0x15, 0x0c, 0x04, 0x42, 0x38, 0xf1, 0x34, 0x01, 0xde, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x3e, 0x78, 0x9a, 0x00, 0xde, 0x38, 0x78, 0x4d, 0x00, 0x6f, 0x40, 0x4e, 0x26, 0xbe, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x27, 0x0e, 0x19, 0x7b, 0x89, 0xb0, 0x0d, 0x0f, 0x00, 0x00, 0xd8, 0xc6, 0x3a, 0xf8, 0x00, 0x00, 0x30, 0xf7, 0xf6, 0x63, 0x31, 0xc1, 0xd5, 0x03, 0xb6, 0xa2, 0xb0, 0x90, 0xb3, 0xd8, 0xad, 0x69, 0x4e, 0x54, 0x37, 0xe9, 0x4d, 0x53, 0x0e, 0xa9, 0x48, 0x26, 0xc4, 0xd6, 0x76, 0x72, 0xe0, 0x00, 0x00, 0xf9, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xb0, 0x0e, 0x00, 0x01, 0x00, 0x95, 0x02, 0x02, 0x00, 0x00, 0x01, 0x24, 0x78, 0x13, 0x60, 0x1b, 0x0f, 0x20, 0x78, 0x89, 0xb0, 0x0d, 0x2f, 0x50, 0x66, 0xc4, 0xd8, 0x06, 0x1f, 0x00, 0x26, 0x79, 0x26, 0xc0, 0x37, 0x1b, 0x2b, 0x14, 0x04, 0x51, 0x13, 0x11, 0x03, 0x26, 0x3d, 0x00, 0x16, 0x06, 0x04, 0x00, 0x18, 0x41, 0x18, 0x02, 0x5c, 0x78, 0x26, 0xc0, 0x37, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x13, 0x60, 0x1b, 0x3f, 0x70, 0x89, 0xb0, 0x0d, 0x4f, 0x0c, 0x4b, 0x84, 0x69, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x36, 0x06, 0x3b, 0xf1, 0x38, 0x01, 0x60, 0x00, 0x02, 0x70, 0x70, 0x58, 0x7f, 0x00, 0x00, 0x80, 0x7d, 0xfb, 0x5c, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7e, 0xbc, 0xbc, 0x3c, 0x8a, 0x86, 0x01, 0x16, 0x8a, 0x66, 0x0b, 0x06, 0x84, 0xd8, 0x9a, 0x60, 0xee, 0x5c, 0x00, 0x00, 0xc1, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0xe1, 0x30, 0x01, 0x08, 0x00, 0x12, 0xa0, 0x14, 0x00, 0x00, 0x00, 0x26, 0x48, 0xe2, 0x70, 0x03, 0x60, 0x00, 0x48, 0xf1, 0x38, 0x01, 0xe0, 0x00, 0xa6, 0x78, 0x9c, 0x00, 0xe0, 0x00, 0x21, 0x6d, 0xc4, 0xe0, 0x07, 0x60, 0x14, 0x06, 0x54, 0x14, 0x11, 0x0d, 0x43, 0x08, 0x3e, 0xc0, 0x10, 0xa0, 0x38, 0x00, 0x40, 0x28, 0x18, 0x02, 0x52, 0x78, 0xc4, 0xe0, 0x07, 0xe0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xe2, 0x70, 0x03, 0x20, 0x70, 0xf1, 0x38, 0x01, 0x60, 0x80, 0x0d, 0x6c, 0x7a, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x9c, 0x38, 0x1c, 0x7b, 0x27, 0xc0, 0x38, 0x03, 0x00, 0x04, 0x09, 0xe9, 0x7c, 0x13, 0xc0, 0x1c, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x26, 0xd4, 0x60, 0xe7, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x02, 0x20, 0x48, 0xe2, 0x7c, 0x03, 0x63, 0x00, 0x48, 0xf1, 0x3e, 0x01, 0xe3, 0x00, 0xa6, 0x78, 0x9f, 0x00, 0xe3, 0x08, 0x20, 0x6d, 0xc4, 0xf8, 0x07, 0xe3, 0x07, 0xde, 0x00, 0x41, 0x26, 0xfd, 0xff, 0xff, 0x27, 0x20, 0xf9, 0xff, 0xff, 0x27, 0xf7, 0xff, 0xff, 0x25, 0xfe, 0xff, 0xff, 0x63, 0xfc, 0xff, 0x7f, 0xc5, 0x61, 0x2a, 0x09, 0x62, 0x61, 0x48, 0x87, 0x20, 0x26, 0x04, 0x00, 0x45, 0x00, 0x08, 0x00, 0x30, 0xe0, 0x20, 0x00, 0x40, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3c, 0x66, 0x00, 0x00, 0x3c, 0x66, 0x3c, 0x66, 0x3c, 0x66, 0x26, 0x79, 0x27, 0xc0, 0x38, 0x3f, 0x41, 0x02, 0x00, 0x40, 0x8b, 0x01, 0x00, 0x60, 0x8c, 0x00, 0x00, 0x60, 0x4d, 0x00, 0x00, 0x60, 0x2e, 0x00, 0x00, 0x24, 0x14, 0x00, 0x00, 0x24, 0x0d, 0x00, 0x00, 0x25, 0x06, 0x00, 0x00, 0x4b, 0x03, 0x00, 0x00, 0x98, 0x01, 0x00, 0x20, 0x9b, 0x00, 0x00, 0x20, 0x1c, 0x92, 0x49, 0x44, 0x17, 0x79, 0xcc, 0x40, 0x00, 0x01, 0x00, 0x3e, 0x00, 0x04, 0x00, 0x38, 0xc0, 0x30, 0xe0, 0x60, 0x08, 0x40, 0x84, 0x80, 0x3c, 0x00, 0x41, 0x00, 0x42, 0x00, 0xec, 0x4d, 0x29, 0x47, 0x03, 0x00, 0x00, 0x00, 0x25, 0x7d, 0x89, 0xf0, 0x0e, 0x33, 0x44, 0x45, 0x13, 0x89, 0x04, 0x00, 0x00, 0x0c, 0x10, 0x00, 0x00, 0x0c, 0x50, 0x78, 0xe2, 0x7c, 0x03, 0xe3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xf1, 0x3e, 0x01, 0x63, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x10, 0x25, 0x1d, 0x79, 0x50, 0x00, 0x72, 0x00, 0x00, 0x08, 0xac, 0xb4, 0x7a, 0x27, 0x80, 0x38, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x11, 0x12, 0xb6, 0xf4, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x20, 0x68, 0xc5, 0x00, 0x07, 0x24, 0x20, 0x48, 0xe2, 0x80, 0x03, 0xa4, 0x40, 0x26, 0xf1, 0x40, 0x01, 0x64, 0x10, 0x20, 0x7d, 0x8a, 0x00, 0x0e, 0x44, 0x14, 0x42, 0x25, 0x90, 0x45, 0x55, 0xb2, 0x80, 0x42, 0x6e, 0x69, 0x15, 0x00, 0x00, 0x00, 0x21, 0x5c, 0x78, 0x28, 0x00, 0x39, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x14, 0x00, 0x1c, 0x6c, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x15, 0x18, 0x7b, 0xc5, 0xf0, 0x08, 0x02, 0x00, 0x0d, 0x8c, 0x46, 0x34, 0xfc, 0x85, 0x1e, 0x37, 0xfb, 0x35, 0x39, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xa0, 0xf6, 0xf1, 0x06, 0x5f, 0x29, 0xdf, 0x99, 0x4a, 0x29, 0x4c, 0x6d, 0x4a, 0x0d, 0xf0, 0xf8, 0x6c, 0xb9, 0x70, 0x00, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1b, 0x18, 0x16, 0x00, 0x02, 0x00, 0x3c, 0x17, 0x05, 0x00, 0x00, 0x02, 0x22, 0x78, 0x8b, 0xe0, 0x10, 0x12, 0x20, 0x68, 0xc5, 0xf0, 0x08, 0x42, 0x40, 0x66, 0xe2, 0xf8, 0x04, 0x02, 0x40, 0x26, 0x7d, 0x17, 0xc0, 0x20, 0xca, 0x00, 0x00, 0x50, 0x19, 0xab, 0x14, 0x46, 0x55, 0x15, 0x10, 0x11, 0x4d, 0x10, 0x03, 0x26, 0x4f, 0x08, 0x5b, 0x42, 0x23, 0x00, 0x40, 0x90, 0x43, 0x02, 0x52, 0x78, 0xc5, 0xf0, 0x08, 0xe2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xe2, 0xf8, 0x04, 0x02, 0x70, 0xf1, 0x7c, 0x02, 0x02, 0x81, 0x58, 0xaf, 0x0f, 0x52, 0x79, 0x5f, 0x00, 0x81, 0x00, 0x00, 0x88, 0xa8, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x6c, 0x61, 0x1e, 0x7b, 0x1b, 0xa0, 0x23, 0x00, 0x00, 0x02, 0xaf, 0x46, 0x3d, 0xf0, 0x00, 0x00, 0xb8, 0x86, 0x51, 0xa0, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x38, 0xef, 0xff, 0x83, 0x44, 0xa8, 0x6b, 0xc6, 0x45, 0xa4, 0x55, 0x48, 0x3d, 0xf0, 0xce, 0xfe, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0x5f, 0x06, 0x80, 0x00, 0x01, 0x1b, 0x71, 0x01, 0x00, 0x00, 0x00, 0x24, 0x78, 0x37, 0x40, 0x46, 0x04, 0x24, 0x78, 0x1b, 0xa0, 0x23, 0x10, 0x50, 0x76, 0x8d, 0xd0, 0x11, 0x08, 0x00, 0x26, 0x79, 0x6e, 0x80, 0x8c, 0x0c, 0x56, 0x14, 0x14, 0x11, 0x26, 0x11, 0x03, 0xa6, 0x3c, 0x00, 0x15, 0x0c, 0x02, 0x00, 0x14, 0x83, 0x10, 0x02, 0x5c, 0x78, 0x6e, 0x80, 0x8c, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7a, 0x37, 0x40, 0x46, 0x38, 0x78, 0x1b, 0xa0, 0x23, 0x40, 0x09, 0x4e, 0x9e, 0x62, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0xab, 0x1e, 0x7b, 0xe3, 0x78, 0x04, 0x19, 0x00, 0x00, 0x36, 0xc6, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x15, 0x02, 0xfe, 0x76, 0x14, 0x8a, 0xc9, 0x07, 0xfb, 0x52, 0x40, 0x40, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x6c, 0x06, 0x01, 0x04, 0x00, 0x23, 0x6e, 0x09, 0x00, 0x00, 0x00, 0x21, 0x68, 0xc6, 0xf0, 0x08, 0x39, 0x20, 0x48, 0xe3, 0x78, 0x04, 0x99, 0x40, 0x26, 0xf1, 0xbc, 0x02, 0x19, 0x00, 0x20, 0x7d, 0x8d, 0xe0, 0x11, 0x69, 0x14, 0x16, 0x14, 0x28, 0x11, 0x0d, 0x43, 0x09, 0x3e, 0x80, 0x18, 0x41, 0x18, 0x00, 0x20, 0x50, 0x18, 0x02, 0x5a, 0x78, 0x8d, 0xe0, 0x11, 0xf9, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xc6, 0xf0, 0x08, 0x39, 0x70, 0xe3, 0x78, 0x04, 0x19, 0x00, 0x00, 0x00, 0x00, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x0d, 0x86, 0x1d, 0x79, 0x6f, 0x80, 0x8d, 0x00, 0x01, 0x2a, 0xdd, 0x51, 0x3f, 0xc8, 0x51, 0xeb, 0x3f, 0x00, 0x9b, 0xa3, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xbe, 0xfa, 0x11, 0x45, 0xa1, 0xda, 0xb4, 0x44, 0x91, 0x2a, 0x86, 0x3f, 0xb7, 0x04, 0x00, 0x76, 0x97, 0x00, 0x00, 0x04, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x55, 0xbb, 0x01, 0x20, 0x00, 0x04, 0x6d, 0x71, 0x00, 0x00, 0x00, 0x02, 0x48, 0x78, 0xdf, 0x01, 0x1a, 0x01, 0x24, 0x78, 0x6f, 0x80, 0x8d, 0x04, 0x52, 0x7a, 0x37, 0xc0, 0x46, 0x02, 0x01, 0x4d, 0xf1, 0xbe, 0x02, 0x9a, 0xfd, 0xff, 0xff, 0x6e, 0x05, 0x00, 0x00, 0xac, 0x02, 0x00, 0x40, 0x59, 0x1f, 0xcb, 0x72, 0xcc, 0x1f, 0x97, 0x82, 0x30, 0xab, 0x14, 0x46, 0x55, 0x15, 0x10, 0x11, 0x4d, 0x10, 0x03, 0xe6, 0x09, 0x00, 0x00, 0x71, 0x2c, 0xc1, 0x4b, 0x01, 0x01, 0x00, 0x4a, 0xc0, 0x09, 0x05, 0xb8, 0x78, 0xdf, 0x01, 0x1a, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x78, 0x6f, 0x80, 0x8d, 0x38, 0x78, 0x37, 0xc0, 0x46, 0x42, 0x0e, 0x37, 0x7b, 0x53, 0x75, 0x8d, 0xf0, 0x11, 0x0a, 0x00, 0x11, 0x15, 0x60, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x12, 0xad, 0x1b, 0x3a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x2e, 0xd8, 0xfc, 0xff, 0xff, 0xff, 0x07, 0x00, 0x0e, 0xf0, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x07, 0x00, 0x0e, 0xf0, 0xf8, 0xff, 0xff, 0xff, 0x07, 0x00, 0x42, 0xdf, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x67, 0x44, 0x4a, 0xda, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x87, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xfe, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf9, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x00, 0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe7, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x00, 0xe0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x9f, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xbb, 0x62, 0x00, 0x01, 0x0b, 0x7d, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0x1e, 0x78, 0x5f, 0x00, 0x81, 0x1e, 0x78, 0x37, 0xc0, 0x46, 0x1e, 0x08, 0x10, 0x18, 0x02, 0x38, 0x03, 0x1c, 0x08, 0x1c, 0x28, 0x10, 0x38, 0x02, 0x38, 0x07, 0x1c, 0x10, 0x1c, 0x48, 0x10, 0x58, 0x02, 0x38, 0x2b, 0x1c, 0x98, 0x1c, 0x68, 0x12, 0x78, 0x0a, 0x38, 0x4f, 0x1c, 0x20, 0x1d, 0x88, 0x14, 0x98, 0x12, 0xb8, 0x43, 0x1c, 0x28, 0x1d, 0xa8, 0x14, 0xb8, 0x12, 0xb8, 0x47, 0x1a, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x17, 0x01, 0x00, 0x00, 0x17, 0x00, 0x00, 0x26, 0xf5, 0x01, 0x01, 0x30, 0xc3, 0x00, 0x01, 0x8b, 0x67, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0x01, 0x01, 0x03, 0x7c, 0xfe, 0xff, 0xff, 0xff, 0x01, 0x01, 0x39, 0xa7, 0x01, 0x00, 0xa9, 0xfb, 0x00, 0x00, 0x99, 0x10, 0x00, 0x00, 0x8a, 0xf7, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x1f, 0x01, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00, 0x30, 0x42, 0x76, 0x62, 0x60, 0x42, 0x77, 0x21, 0xb0, 0x42, 0x17, 0x24, 0x85, 0x43, 0x83, 0x1d, 0x88, 0x42, 0x81, 0xca, 0x60, 0x42, 0x17, 0x24, 0x85, 0x43, 0x71, 0x77, 0x09, 0x42, 0x77, 0x21, 0xb0, 0x42, 0x17, 0x24, 0x85, 0x43, 0x85, 0x93, 0x33, 0x43, 0x81, 0xca, 0x60, 0x42, 0x17, 0x24, 0x85, 0x01, 0x00, 0x04, 0x1f, 0x01, 0x00, 0x01, 0xb8, 0x01, 0x00, 0x00, 0xf6, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x77, 0xaa, 0x80, 0x00, 0x01, 0x00, 0x41, 0x22, 0x3e, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x98, 0x20, 0x00, 0x44, 0x96, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x01, 0x0d, 0x83, 0x89, 0x22, 0x74, 0xea, 0xa0, 0x00, 0x01, 0x00, 0x10, 0x48, 0x3c, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xa6, 0x08, 0x00, 0x40, 0xa5, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x70, 0xe5, 0xc0, 0x00, 0x10, 0x3b, 0xef, 0x78, 0x00, 0x00, 0x00, 0x00, 0x24, 0xc3, 0x50, 0x7f, 0x00, 0x00, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x8a, 0x6d, 0x49, 0x15, 0x8a, 0x5d, 0x9b, 0x54, 0x83, 0x7f, 0x20, 0x00, 0xee, 0x5c, 0x00, 0x00, 0xc1, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x49, 0x03, 0x01, 0x08, 0x00, 0x0d, 0xbd, 0x13, 0x00, 0x00, 0x00, 0x22, 0x48, 0xde, 0xf0, 0x00, 0x40, 0x00, 0x48, 0xef, 0x78, 0x00, 0x80, 0x00, 0xa6, 0x77, 0xbc, 0x00, 0x00, 0x00, 0x20, 0x6d, 0xbd, 0xe0, 0x00, 0x40, 0xfe, 0xff, 0x7f, 0xb9, 0x1f, 0xcb, 0x6a, 0xcc, 0x1f, 0x96, 0x8a, 0x30, 0x21, 0x07, 0x00, 0x00, 0x09, 0x5c, 0x76, 0xde, 0x00, 0x00, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xef, 0x00, 0x00, 0x38, 0x70, 0xf7, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x7b, 0xbe, 0x08, 0x00, 0x05, 0x00, 0x00, 0xc9, 0x0a, 0x34, 0xfc, 0x00, 0x00, 0x20, 0xfb, 0x62, 0x12, 0x1d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xa0, 0xf6, 0x29, 0x3e, 0x50, 0x29, 0xd2, 0xdd, 0x50, 0x29, 0x89, 0x81, 0x46, 0x0e, 0x2a, 0x75, 0x79, 0xb9, 0x70, 0x00, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x92, 0x1a, 0x00, 0x02, 0x00, 0x36, 0xf4, 0x07, 0x00, 0x00, 0x01, 0x21, 0x78, 0x7c, 0x10, 0x00, 0x15, 0x20, 0x68, 0xbe, 0x08, 0x00, 0x45, 0x40, 0x66, 0xdf, 0x04, 0x00, 0x05, 0x20, 0x24, 0x75, 0xf8, 0x20, 0x00, 0x35, 0x15, 0x12, 0x14, 0x51, 0x12, 0x15, 0x03, 0x13, 0x3e, 0x00, 0x14, 0x83, 0x08, 0x00, 0x10, 0xa0, 0x18, 0x02, 0x5e, 0x70, 0xf8, 0x20, 0x00, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x7c, 0x10, 0x00, 0x35, 0x70, 0xbe, 0x08, 0x00, 0x45, 0x05, 0x7e, 0x1b, 0x12, 0x3b, 0xef, 0x8a, 0x00, 0x09, 0x00, 0x03, 0xfa, 0x60, 0x50, 0x7f, 0x00, 0x00, 0x00, 0x7e, 0xff, 0xde, 0x6e, 0x6e, 0x59, 0x6d, 0x0b, 0x70, 0x0d, 0xee, 0x11, 0x79, 0x70, 0x73, 0x4d, 0x8a, 0x73, 0x53, 0x68, 0x8a, 0x5c, 0xbd, 0x23, 0x83, 0x7f, 0x20, 0x00, 0xee, 0x5c, 0x00, 0x00, 0xc1, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x07, 0xf5, 0x20, 0x01, 0x08, 0x00, 0x0d, 0xbd, 0x13, 0x00, 0x00, 0x00, 0x2d, 0x48, 0xdf, 0x14, 0x00, 0x49, 0x00, 0x48, 0xef, 0x8a, 0x00, 0x89, 0x00, 0xa6, 0x77, 0xc5, 0x00, 0x09, 0x41, 0x21, 0x6d, 0xbe, 0x28, 0x00, 0xa9, 0xad, 0xfc, 0xff, 0xff, 0x6f, 0x09, 0xf5, 0x0b, 0x8c, 0x0c, 0xea, 0x0b, 0xe6, 0x14, 0x06, 0x54, 0x14, 0x11, 0x0d, 0x45, 0x10, 0x03, 0xe6, 0x00, 0x00, 0x01, 0x3f, 0x00, 0x14, 0x83, 0x08, 0x00, 0x10, 0xa0, 0x38, 0x02, 0x5a, 0x78, 0x7c, 0x50, 0x00, 0xf9, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xbe, 0x28, 0x00, 0x29, 0x70, 0xdf, 0x14, 0x00, 0x09, 0xf4, 0xe0, 0xe5, 0x29, 0x3b, 0x77, 0xc9, 0x00, 0x0d, 0x00, 0x00, 0x15, 0x7e, 0xa0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x45, 0x24, 0xb2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x23, 0x4f, 0xa4, 0x45, 0x36, 0xa0, 0x00, 0x45, 0x2e, 0x30, 0x00, 0x41, 0xbf, 0x90, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x2a, 0x7e, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x00, 0x13, 0x48, 0xef, 0x92, 0x00, 0x0d, 0x01, 0x48, 0x77, 0xc9, 0x00, 0x0d, 0x02, 0x53, 0x76, 0xe4, 0x80, 0x06, 0x01, 0x20, 0x4d, 0xdf, 0x24, 0x00, 0x4d, 0x12, 0x16, 0x54, 0x14, 0x11, 0x0d, 0x21, 0x09, 0x36, 0xe0, 0x20, 0x50, 0x58, 0x00, 0x80, 0x14, 0x18, 0x02, 0x42, 0x78, 0xdf, 0x24, 0x00, 0xcd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xef, 0x92, 0x00, 0x0d, 0x70, 0x77, 0xc9, 0x00, 0x0d, 0x3f, 0xb1, 0x1c, 0x38, 0x1c, 0x77, 0xf2, 0xc0, 0x03, 0x03, 0x00, 0x05, 0x56, 0x42, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4d, 0xb0, 0x00, 0x44, 0x4b, 0xc8, 0x00, 0x40, 0x6f, 0xe4, 0x01, 0x76, 0xcb, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x0a, 0xad, 0x02, 0x40, 0x00, 0x01, 0xb7, 0xd3, 0x00, 0x00, 0x00, 0x29, 0x24, 0x76, 0xe5, 0x80, 0x07, 0x03, 0x24, 0x74, 0xf2, 0xc0, 0x03, 0x0b, 0x50, 0x76, 0xf9, 0x60, 0x01, 0x07, 0x00, 0x4d, 0x77, 0xcb, 0x00, 0x0f, 0x06, 0x56, 0x15, 0x10, 0x11, 0x4d, 0x10, 0x03, 0x66, 0x78, 0x80, 0x14, 0x18, 0x01, 0x00, 0x16, 0x06, 0x08, 0x02, 0xb8, 0x77, 0xcb, 0x00, 0x0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xe5, 0x80, 0x07, 0x39, 0x74, 0xf2, 0xc0, 0x03, 0x03, 0x00, 0x00, 0x00, 0x18, 0x7b, 0x7d, 0xa0, 0x01, 0x0e, 0x00, 0x19, 0x52, 0x07, 0x3a, 0xf8, 0x00, 0x00, 0x30, 0xf7, 0xff, 0xb9, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0xc3, 0xe1, 0xab, 0x4b, 0x53, 0xa5, 0x3b, 0x40, 0x52, 0xe1, 0xd0, 0x48, 0x1b, 0xf9, 0x00, 0x70, 0x72, 0xe0, 0x00, 0x00, 0xf9, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x01, 0x00, 0x32, 0xa4, 0x0f, 0x00, 0x01, 0x00, 0x6d, 0xe9, 0x03, 0x00, 0x00, 0x0d, 0x26, 0x70, 0xfb, 0x40, 0x03, 0x0e, 0x20, 0x78, 0x7d, 0xa0, 0x01, 0x2e, 0x50, 0x66, 0xbe, 0xd0, 0x00, 0x1e, 0x00, 0x27, 0x75, 0xf6, 0x80, 0x07, 0x1e, 0xe1, 0x14, 0x06, 0x54, 0x14, 0x11, 0x0d, 0x43, 0x08, 0x3e, 0xe0, 0x20, 0x50, 0x58, 0x00, 0x80, 0x14, 0x18, 0x02, 0x42, 0x78, 0xdf, 0x68, 0x00, 0xde, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xef, 0xb4, 0x00, 0x1e, 0x70, 0x77, 0xda, 0x00, 0x1e, 0x3c, 0xbe, 0x17, 0x0a, 0x1c, 0x77, 0xf6, 0xc0, 0x07, 0x03, 0x00, 0x62, 0xc0, 0x03, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4d, 0x8d, 0xde, 0x46, 0x4c, 0x77, 0xb0, 0x41, 0x6f, 0xa4, 0xd4, 0x75, 0xcb, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0xc5, 0x81, 0x03, 0x40, 0x00, 0x01, 0xb7, 0xd3, 0x00, 0x00, 0x00, 0x37, 0x24, 0x76, 0xed, 0x80, 0x0f, 0x03, 0x24, 0x74, 0xf6, 0xc0, 0x07, 0x0b, 0x50, 0x76, 0xfb, 0x60, 0x03, 0x07, 0x00, 0x4d, 0x77, 0xdb, 0x00, 0x1f, 0x01, 0x43, 0x5b, 0x78, 0xbe, 0xd8, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xdf, 0x6c, 0x00, 0x1f, 0x70, 0xef, 0xb6, 0x00, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x1d, 0x77, 0xf1, 0x00, 0x13, 0x00, 0x00, 0x0a, 0xbf, 0x40, 0x3f, 0xc0, 0x00, 0x00, 0x3e, 0xa2, 0x92, 0x59, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x91, 0xa7, 0xd2, 0x44, 0x9d, 0x8f, 0x55, 0x44, 0x97, 0x3e, 0x8f, 0x41, 0xdf, 0xc8, 0x00, 0x76, 0x97, 0x00, 0x00, 0x04, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x15, 0x7e, 0x01, 0x20, 0x00, 0x03, 0x6f, 0x53, 0x00, 0x00, 0x00, 0x3e, 0x48, 0x77, 0xe2, 0x00, 0x26, 0x01, 0x24, 0x76, 0xf1, 0x00, 0x13, 0x04, 0x52, 0x76, 0xf8, 0x80, 0x09, 0x02, 0x00, 0x4d, 0xef, 0xc4, 0x00, 0x26, 0x16, 0x16, 0x2a, 0x14, 0x01, 0x4d, 0x10, 0x0b, 0x26, 0xf0, 0x40, 0x28, 0x98, 0x00, 0x00, 0x15, 0x0c, 0x04, 0x42, 0x38, 0xef, 0xc4, 0x00, 0xa6, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x3e, 0x77, 0xe2, 0x00, 0x26, 0x38, 0x76, 0xf1, 0x00, 0x13, 0x3e, 0xd8, 0x8e, 0x1c, 0x1c, 0x73, 0xfc, 0xc0, 0x05, 0x02, 0x00, 0x02, 0x48, 0x83, 0x3d, 0xf0, 0x00, 0x00, 0x38, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xa7, 0x5d, 0x79, 0x46, 0xa6, 0x19, 0xcb, 0x43, 0x37, 0xf2, 0x01, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0x90, 0x07, 0x80, 0x00, 0x00, 0xdb, 0xd3, 0x01, 0x00, 0x00, 0x23, 0x24, 0x74, 0xf9, 0x80, 0x0a, 0x06, 0x24, 0x70, 0xfc, 0xc0, 0x05, 0x12, 0x50, 0x76, 0x7e, 0x60, 0x02, 0x0a, 0x00, 0x26, 0x77, 0xf3, 0x00, 0x15, 0xe8, 0xff, 0xff, 0x6f, 0x19, 0xfc, 0xb5, 0x72, 0x1c, 0xf9, 0x6a, 0x8c, 0x10, 0x63, 0x00, 0x00, 0x01, 0x51, 0x78, 0xbf, 0x30, 0x01, 0xea, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xdf, 0x98, 0x00, 0x2a, 0x70, 0xef, 0xcc, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x1d, 0x77, 0xf4, 0x00, 0x16, 0x00, 0x00, 0x0a, 0xad, 0x60, 0x3f, 0xc0, 0x00, 0x00, 0x3e, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x9c, 0xe9, 0xf7, 0x45, 0x98, 0x5d, 0x83, 0x41, 0xe3, 0x7f, 0x17, 0x76, 0x97, 0x00, 0x00, 0x04, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x15, 0x5a, 0x01, 0x20, 0x00, 0x03, 0x6f, 0x53, 0x00, 0x00, 0x00, 0x49, 0x48, 0x77, 0xe8, 0x00, 0x2c, 0x01, 0x24, 0x76, 0xf4, 0x00, 0x16, 0x04, 0x52, 0x76, 0xfa, 0x00, 0x0b, 0x00, 0x00, 0x4d, 0xef, 0xd0, 0x00, 0x2c, 0x16, 0x16, 0x2a, 0x14, 0x01, 0x4d, 0x10, 0x0b, 0x26, 0xf0, 0x40, 0x28, 0x98, 0x00, 0x00, 0x15, 0x0c, 0x04, 0x42, 0x38, 0xef, 0xd0, 0x00, 0xac, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x3e, 0x77, 0xe8, 0x00, 0x2c, 0x38, 0x76, 0xf4, 0x00, 0x16, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x73, 0xfd, 0x60, 0x05, 0x07, 0x00, 0x4c, 0x39, 0x87, 0x3d, 0xf0, 0x00, 0x00, 0x38, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xa7, 0x75, 0x03, 0x45, 0xa6, 0x37, 0x82, 0x44, 0x37, 0xf2, 0x00, 0x70, 0xe5, 0xc0, 0x00, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x98, 0x73, 0x07, 0x80, 0x00, 0x00, 0xdb, 0xd3, 0x01, 0x00, 0x00, 0x27, 0x24, 0x74, 0xfa, 0xc0, 0x0b, 0x07, 0x24, 0x70, 0xfd, 0x60, 0x05, 0x17, 0x50, 0x76, 0x7e, 0xb0, 0x02, 0x0f, 0x00, 0x26, 0x77, 0xf5, 0x80, 0x17, 0x0d, 0x56, 0x14, 0x14, 0x11, 0x26, 0x11, 0x03, 0xa6, 0x3c, 0x00, 0x15, 0x0c, 0x02, 0x00, 0x14, 0x83, 0x10, 0x02, 0x5c, 0x76, 0xf5, 0x80, 0x17, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xfa, 0xc0, 0x0b, 0x3b, 0x70, 0xfd, 0x60, 0x05, 0x07, 0x00, 0x00, 0x00, 0x10, 0x7b, 0xbf, 0x80, 0x01, 0x14, 0x00, 0x00, 0x92, 0x83, 0x34, 0xfc, 0x00, 0x00, 0x20, 0xfb, 0x76, 0xb1, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xa0, 0xf5, 0xc2, 0x85, 0x51, 0x29, 0xbd, 0xf2, 0x44, 0x29, 0x77, 0x27, 0x58, 0x0d, 0xfc, 0x80, 0x64, 0xb9, 0x70, 0x00, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x24, 0x13, 0x00, 0x02, 0x00, 0x36, 0xf4, 0x07, 0x00, 0x00, 0x0a, 0x27, 0x78, 0x7f, 0x00, 0x03, 0x14, 0x20, 0x68, 0xbf, 0x80, 0x01, 0x54, 0x40, 0x66, 0xdf, 0xc0, 0x00, 0x34, 0x00, 0x24, 0x75, 0xfe, 0x00, 0x06, 0xa4, 0xff, 0xff, 0x6f, 0x79, 0x3f, 0x2d, 0x72, 0x2c, 0x7e, 0x5a, 0x8e, 0x00, 0xc3, 0x01, 0x00, 0x00, 0x43, 0x38, 0xef, 0xe0, 0x00, 0xb4, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x3e, 0x77, 0xf0, 0x00, 0x34, 0x38, 0x76, 0xf8, 0x00, 0x1a, 0x40, 0x58, 0xbf, 0x13, 0x1c, 0x73, 0xfe, 0x40, 0x06, 0x06, 0x00, 0x57, 0x0e, 0x85, 0x3d, 0xe4, 0x3f, 0x1e, 0x3c, 0xe7, 0x19, 0xea, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x38, 0xe6, 0x24, 0xba, 0x41, 0xa7, 0x63, 0x71, 0x46, 0xa5, 0xbc, 0x2b, 0x47, 0x38, 0x54, 0x0c, 0x73, 0xe5, 0xc0, 0x00, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0xae, 0x1d, 0x05, 0x80, 0x00, 0x00, 0xdb, 0xd3, 0x01, 0x00, 0x00, 0x2c, 0x25, 0x74, 0xfc, 0x80, 0x0d, 0x06, 0x24, 0x70, 0xfe, 0x40, 0x06, 0x16, 0x20, 0x7b, 0x7f, 0x20, 0x03, 0x06, 0x00, 0x1a, 0xb3, 0x02, 0x00, 0x00, 0x0a, 0x0c, 0x00, 0x1a, 0xb9, 0x51, 0x66, 0xbf, 0x90, 0x01, 0x16, 0x00, 0x27, 0x75, 0xfc, 0x80, 0x0d, 0x9e, 0x5e, 0x14, 0x06, 0x54, 0x14, 0x11, 0x0d, 0x43, 0x08, 0x3e, 0xe0, 0x20, 0x50, 0x58, 0x00, 0x80, 0x14, 0x18, 0x02, 0x42, 0x78, 0xdf, 0xc8, 0x00, 0xf6, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xef, 0xe4, 0x00, 0x36, 0x70, 0x77, 0xf2, 0x00, 0x36, 0x3f, 0xc3, 0xa5, 0x30, 0x1c, 0x77, 0xfc, 0xc0, 0x0d, 0x03, 0x00, 0x04, 0x90, 0x43, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4d, 0xa7, 0x9e, 0x45, 0x4b, 0x7b, 0x13, 0x41, 0x71, 0x5f, 0x0f, 0x76, 0xcb, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x09, 0x21, 0x03, 0x40, 0x00, 0x01, 0xb7, 0xd3, 0x00, 0x00, 0x00, 0x5b, 0x24, 0x76, 0xf9, 0x80, 0x1b, 0x03, 0x24, 0x74, 0xfc, 0xc0, 0x0d, 0x0b, 0x50, 0x76, 0xfe, 0x60, 0x06, 0x07, 0x00, 0x4d, 0x77, 0xf3, 0x00, 0x37, 0xf4, 0xff, 0xff, 0x6f, 0x19, 0xf9, 0x6a, 0x73, 0x1c, 0xf2, 0xea, 0x18, 0x10, 0x33, 0x00, 0x00, 0x01, 0x59, 0x78, 0x7f, 0x30, 0x03, 0xf7, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xbf, 0x98, 0x01, 0x37, 0x70, 0xdf, 0xcc, 0x00, 0x37, 0x00, 0x00, 0x00, 0x00, 0x3b, 0x77, 0xf7, 0x00, 0x3b, 0x00, 0x00, 0x12, 0x43, 0xb0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x3a, 0xdf, 0x84, 0x45, 0x32, 0x19, 0xbf, 0x41, 0xbf, 0x90, 0x04, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x01, 0x28, 0x48, 0xef, 0xee, 0x00, 0x3b, 0x01, 0x48, 0x77, 0xf7, 0x00, 0x3b, 0x02, 0x53, 0x76, 0xfb, 0x80, 0x1d, 0x01, 0x20, 0x4d, 0xdf, 0xdc, 0x00, 0x7b, 0xfc, 0xff, 0x7f, 0xdc, 0x1f, 0xe5, 0x6a, 0xcc, 0x1f, 0xcb, 0x8a, 0x30, 0x10, 0x0f, 0x00, 0x00, 0x01, 0x5d, 0x74, 0xfd, 0xc0, 0x0e, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xfe, 0xe0, 0x07, 0x3b, 0x70, 0x7f, 0x70, 0x03, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x7b, 0xdf, 0xe0, 0x00, 0x3c, 0x00, 0x00, 0x49, 0x83, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x14, 0xf1, 0x69, 0x40, 0x14, 0xbc, 0x2c, 0x7e, 0x06, 0xfe, 0x40, 0x44, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x92, 0x03, 0x01, 0x04, 0x00, 0x1b, 0x7a, 0x0b, 0x00, 0x00, 0x06, 0x29, 0x68, 0xbf, 0xc0, 0x01, 0x3c, 0x20, 0x48, 0xdf, 0xe0, 0x00, 0xbc, 0x40, 0x26, 0xef, 0xf0, 0x00, 0x3c, 0x00, 0x20, 0x7d, 0x7f, 0x80, 0x03, 0x4c, 0xff, 0xff, 0x7f, 0xb9, 0x1f, 0x96, 0x7a, 0x4c, 0x3f, 0x2d, 0x8a, 0x10, 0x43, 0x03, 0x00, 0x00, 0x05, 0xb8, 0x77, 0xf8, 0x00, 0x3c, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xfc, 0x00, 0x1e, 0x38, 0x74, 0xfe, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x18, 0x7b, 0x7f, 0x90, 0x03, 0x0d, 0x00, 0x01, 0x24, 0x83, 0x3a, 0xf8, 0x00, 0x00, 0x30, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x53, 0x9c, 0x87, 0x41, 0x52, 0xef, 0xfe, 0x45, 0x1b, 0xf9, 0x00, 0x74, 0x72, 0xe0, 0x00, 0x00, 0xf9, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x48, 0x0b, 0x00, 0x01, 0x00, 0x6d, 0xe9, 0x03, 0x00, 0x00, 0x1a, 0x26, 0x70, 0xff, 0x20, 0x07, 0x0d, 0x20, 0x78, 0x7f, 0x90, 0x03, 0x2d, 0x50, 0x66, 0xbf, 0xc8, 0x01, 0x1d, 0x00, 0x26, 0x75, 0xfe, 0x40, 0x0f, 0xd1, 0xff, 0xff, 0x6f, 0x39, 0x7e, 0x5a, 0x72, 0x1c, 0xfc, 0xb5, 0x8c, 0x10, 0xc3, 0x00, 0x00, 0x01, 0x41, 0x78, 0xdf, 0xe4, 0x00, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xef, 0xf2, 0x00, 0x3d, 0x70, 0x77, 0xf9, 0x00, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x77, 0xff, 0x00, 0x10, 0x00, 0x00, 0x04, 0x90, 0x43, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x4d, 0x38, 0x3f, 0x46, 0x4c, 0x0e, 0x29, 0x41, 0x6f, 0xe4, 0x02, 0x74, 0xcb, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x09, 0x21, 0x03, 0x40, 0x00, 0x01, 0xb7, 0xd3, 0x00, 0x00, 0x00, 0x6d, 0x24, 0x76, 0xfe, 0x00, 0x20, 0x02, 0x24, 0x74, 0xff, 0x00, 0x10, 0x08, 0x50, 0x76, 0xff, 0x80, 0x08, 0x00, 0x00, 0x4d, 0x77, 0xfc, 0x00, 0x40, 0xf4, 0xff, 0xff, 0x6f, 0x19, 0xf9, 0x6a, 0x73, 0x1c, 0xf2, 0xea, 0x18, 0x10, 0x33, 0x00, 0x00, 0x01, 0x59, 0x78, 0x7f, 0xc0, 0x04, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xbf, 0xe0, 0x02, 0x20, 0x70, 0xdf, 0xf0, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3b, 0x77, 0xfd, 0x00, 0x41, 0x00, 0x00, 0x12, 0x43, 0xb0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x37, 0xa4, 0xf1, 0x45, 0x2f, 0xe4, 0x6f, 0x41, 0xbe, 0xfc, 0x4c, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x01, 0x2e, 0x48, 0xef, 0xfa, 0x00, 0x41, 0x01, 0x48, 0x77, 0xfd, 0x00, 0x41, 0x02, 0x53, 0x76, 0xfe, 0x80, 0x20, 0x01, 0x20, 0x4d, 0xdf, 0xf4, 0x01, 0x41, 0xfc, 0xff, 0x7f, 0xdc, 0x1f, 0xe5, 0x6a, 0xcc, 0x1f, 0xcb, 0x8a, 0x30, 0x10, 0x0f, 0x00, 0x00, 0x01, 0x5d, 0x74, 0xff, 0x40, 0x10, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x76, 0xff, 0xa0, 0x08, 0x39, 0x70, 0x7f, 0xd0, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x7b, 0xdf, 0xf8, 0x01, 0x02, 0x00, 0x08, 0x51, 0x23, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xf6, 0x73, 0x05, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfd, 0xfc, 0xff, 0x41, 0x14, 0xda, 0x37, 0x6c, 0x14, 0xb6, 0xe9, 0x7c, 0x06, 0xfe, 0x40, 0x40, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x10, 0xa3, 0x03, 0x01, 0x04, 0x00, 0x1b, 0x7a, 0x0b, 0x00, 0x00, 0x07, 0x22, 0x68, 0xbf, 0xf0, 0x02, 0x22, 0x20, 0x48, 0xdf, 0xf8, 0x01, 0x82, 0x40, 0x26, 0xef, 0xfc, 0x00, 0x42, 0x82, 0x21, 0x7d, 0x7f, 0xe0, 0x04, 0x52, 0xff, 0xff, 0x7f, 0xb9, 0x0f, 0x50, 0x8b, 0x70, 0x1e, 0xa1, 0x73, 0x0c, 0x45, 0x10, 0x0b, 0x00, 0x00, 0x31, 0x59, 0x78, 0x7f, 0xe0, 0x04, 0xf2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xbf, 0xf0, 0x02, 0x22, 0x70, 0xdf, 0xf8, 0x01, 0x42, 0x00, 0xfd, 0x05, 0x27, 0x3b, 0x78, 0x01, 0x00, 0x45, 0x00, 0x01, 0xb6, 0x03, 0xa0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x4d, 0x02, 0x8b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xbf, 0x19, 0x51, 0xd7, 0x45, 0x3d, 0x6c, 0xb3, 0x45, 0x2d, 0x21, 0x71, 0x41, 0xbf, 0x90, 0x04, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0x6c, 0x03, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x01, 0x35, 0x48, 0xf0, 0x02, 0x00, 0x45, 0x01, 0x48, 0x78, 0x01, 0x00, 0x45, 0x02, 0x53, 0x78, 0x00, 0x80, 0x22, 0xc3, 0x21, 0x4d, 0xe0, 0x04, 0x01, 0x45, 0xfc, 0xff, 0x7f, 0xdc, 0x1f, 0xe5, 0x72, 0xcc, 0x1f, 0xcb, 0x92, 0x30, 0x10, 0x0f, 0x00, 0x00, 0x01, 0x5d, 0x78, 0x00, 0x40, 0x11, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x00, 0x20, 0x08, 0x3d, 0x70, 0x80, 0x10, 0x04, 0x45, 0x09, 0xff, 0x72, 0x07, 0x7b, 0xe0, 0x08, 0x01, 0x06, 0x00, 0x07, 0x8d, 0x85, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfd, 0xb2, 0x0d, 0x1e, 0xdf, 0xab, 0x77, 0x33, 0xe2, 0x12, 0x7b, 0x24, 0xfb, 0x0f, 0xbc, 0x56, 0x14, 0xed, 0x9a, 0x5d, 0x14, 0xc4, 0xd5, 0x77, 0x07, 0x0b, 0xc7, 0x42, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x0f, 0x1a, 0x05, 0x01, 0x04, 0x00, 0x1b, 0x7a, 0x0b, 0x00, 0x00, 0x07, 0x27, 0x68, 0xc0, 0x10, 0x02, 0x26, 0x20, 0x48, 0xe0, 0x08, 0x01, 0x86, 0x40, 0x26, 0xf0, 0x04, 0x00, 0x46, 0x00, 0x21, 0x7d, 0x80, 0x20, 0x04, 0x66, 0x14, 0x16, 0x14, 0x28, 0x11, 0x0d, 0x43, 0x09, 0x3e, 0x80, 0x18, 0x41, 0x18, 0x00, 0x20, 0x50, 0x18, 0x02, 0x5a, 0x78, 0x80, 0x20, 0x04, 0xf6, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xc0, 0x10, 0x02, 0x26, 0x70, 0xe0, 0x08, 0x01, 0x06, 0xfd, 0x24, 0x42, 0x31, 0x3b, 0x78, 0x03, 0x00, 0x47, 0x00, 0x01, 0xe3, 0x44, 0xb0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x6c, 0x83, 0x5e, 0x37, 0xea, 0xdd, 0xf3, 0x38, 0x84, 0x9e, 0xe4, 0x3e, 0xc3, 0xef, 0x16, 0x45, 0x3a, 0x63, 0x95, 0x45, 0x30, 0x26, 0x8c, 0x41, 0xbf, 0xd9, 0xfa, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0xc6, 0x44, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x01, 0x38, 0x48, 0xf0, 0x06, 0x00, 0x47, 0x01, 0x48, 0x78, 0x03, 0x00, 0x47, 0x02, 0x53, 0x78, 0x01, 0x80, 0x23, 0x01, 0x21, 0x4d, 0xe0, 0x0c, 0x01, 0x47, 0x12, 0x16, 0x54, 0x14, 0x11, 0x0d, 0x21, 0x09, 0x36, 0xe0, 0x20, 0x50, 0x58, 0x00, 0x80, 0x14, 0x18, 0x02, 0x42, 0x78, 0xe0, 0x0c, 0x01, 0xc7, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xf0, 0x06, 0x00, 0x47, 0x70, 0x78, 0x03, 0x00, 0x47, 0x3f, 0x49, 0x10, 0xb1, 0x1c, 0x7b, 0x01, 0x00, 0x12, 0x00, 0x00, 0x78, 0xd0, 0x43, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xdb, 0x20, 0xd7, 0x36, 0xfa, 0xb7, 0x7c, 0x3b, 0x21, 0x27, 0xb9, 0x3c, 0xb0, 0xfb, 0xc5, 0x46, 0x4e, 0x98, 0x29, 0x46, 0x4c, 0x8d, 0x9d, 0x42, 0x70, 0xfe, 0x1f, 0x76, 0xcb, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0xf1, 0xa1, 0x03, 0x40, 0x00, 0x01, 0xb7, 0xd3, 0x00, 0x00, 0x00, 0x79, 0x24, 0x78, 0x02, 0x00, 0x24, 0x02, 0x24, 0x78, 0x01, 0x00, 0x12, 0x08, 0x50, 0x7e, 0x00, 0x80, 0x09, 0x00, 0x01, 0x4d, 0x78, 0x04, 0x00, 0x48, 0x06, 0x56, 0x15, 0x10, 0x11, 0x4d, 0x10, 0x03, 0x66, 0x78, 0x80, 0x14, 0x18, 0x01, 0x00, 0x16, 0x06, 0x08, 0x02, 0xb8, 0x78, 0x04, 0x00, 0x48, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x78, 0x02, 0x00, 0x24, 0x38, 0x78, 0x01, 0x00, 0x12, 0x3c, 0xd2, 0x44, 0x2c, 0x19, 0x7b, 0x80, 0x50, 0x04, 0x09, 0x00, 0x1e, 0x34, 0x82, 0x3a, 0xf8, 0x00, 0x00, 0x30, 0xf6, 0xc8, 0x35, 0x3e, 0x7e, 0xad, 0xdf, 0x33, 0x88, 0x49, 0xee, 0x34, 0xec, 0x3e, 0xf1, 0x46, 0x53, 0x95, 0x26, 0x45, 0x53, 0x12, 0xee, 0x4c, 0x1c, 0x05, 0xd7, 0x7a, 0x72, 0xe0, 0x00, 0x00, 0xf9, 0xff, 0xff, 0xff, 0x07, 0x00, 0x00, 0x00, 0x01, 0x00, 0x3c, 0x68, 0x0a, 0x00, 0x01, 0x00, 0x6d, 0xe9, 0x03, 0x00, 0x00, 0x1e, 0x26, 0x78, 0x00, 0xa0, 0x09, 0x09, 0x20, 0x78, 0x80, 0x50, 0x04, 0x29, 0x50, 0x66, 0xc0, 0x28, 0x02, 0x09, 0x00, 0x27, 0x79, 0x01, 0x40, 0x12, 0x19, 0x2b, 0x14, 0x04, 0x51, 0x13, 0x11, 0x03, 0x26, 0x3d, 0x00, 0x16, 0x06, 0x04, 0x00, 0x18, 0x41, 0x18, 0x02, 0x5c, 0x78, 0x01, 0x40, 0x12, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x00, 0xa0, 0x09, 0x39, 0x70, 0x80, 0x50, 0x04, 0x39, 0xf4, 0x91, 0x0b, 0x01, 0x7b, 0xe0, 0x18, 0x01, 0x0a, 0x00, 0x0b, 0xb0, 0x04, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x14, 0xea, 0x7d, 0x57, 0x14, 0xba, 0xd9, 0x64, 0x06, 0xfe, 0x40, 0x41, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x17, 0x60, 0x04, 0x01, 0x04, 0x00, 0x1b, 0x7a, 0x0b, 0x00, 0x00, 0x08, 0x20, 0x68, 0xc0, 0x30, 0x02, 0x2a, 0x20, 0x48, 0xe0, 0x18, 0x01, 0x8a, 0x40, 0x26, 0xf0, 0x0c, 0x00, 0x4a, 0x00, 0x20, 0x7d, 0x80, 0x60, 0x04, 0x6a, 0x14, 0x16, 0x14, 0x28, 0x11, 0x0d, 0x43, 0x09, 0x3e, 0x80, 0x18, 0x41, 0x18, 0x00, 0x20, 0x50, 0x18, 0x02, 0x5a, 0x78, 0x80, 0x60, 0x04, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xc0, 0x30, 0x02, 0x2a, 0x70, 0xe0, 0x18, 0x01, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x3b, 0x78, 0x09, 0x00, 0x4d, 0x00, 0x00, 0x12, 0x43, 0xb0, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x7a, 0x3a, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x58, 0x3e, 0x9d, 0x45, 0x37, 0xf6, 0xa8, 0x45, 0x30, 0x38, 0x21, 0x41, 0xbe, 0xc5, 0x5a, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0x01, 0x10, 0x00, 0x06, 0xde, 0x33, 0x00, 0x00, 0x02, 0x0a, 0x48, 0xf0, 0x12, 0x00, 0x4d, 0x01, 0x48, 0x78, 0x09, 0x00, 0x4d, 0x02, 0x53, 0x78, 0x04, 0x80, 0x26, 0x01, 0x20, 0x4d, 0xe0, 0x24, 0x01, 0x4d, 0xfc, 0xff, 0x7f, 0xdc, 0x1f, 0xe5, 0x6a, 0xcc, 0x1f, 0xcb, 0x8a, 0x30, 0x10, 0x0f, 0x00, 0x00, 0x01, 0x5d, 0x78, 0x02, 0x40, 0x13, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0x01, 0x20, 0x09, 0x3d, 0x70, 0x80, 0x90, 0x04, 0x3d, 0xed, 0x9e, 0x44, 0x0b, 0x7b, 0xe0, 0x70, 0x01, 0x20, 0x00, 0x0a, 0xc9, 0x33, 0x28, 0xfe, 0x00, 0x00, 0x00, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x14, 0xf3, 0x0e, 0x54, 0x14, 0xcb, 0x54, 0x67, 0x06, 0xfe, 0x40, 0x48, 0xdc, 0xb8, 0x00, 0x00, 0xe1, 0xff, 0xff, 0xff, 0x1f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x15, 0x93, 0x13, 0x01, 0x04, 0x00, 0x57, 0x20, 0x08, 0x00, 0x00, 0x00, 0x25, 0x68, 0xc0, 0xe0, 0x03, 0x20, 0x20, 0x48, 0xe0, 0x70, 0x01, 0xa0, 0x40, 0x26, 0xf0, 0x38, 0x00, 0x60, 0x00, 0x59, 0x78, 0x81, 0xc0, 0x06, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x1f, 0x7e, 0xc0, 0xe0, 0x03, 0x20, 0x70, 0xe0, 0x70, 0x01, 0x20, 0x00, 0x00, 0x00, 0x00, 0x3b, 0x78, 0x1e, 0x00, 0x62, 0x00, 0x02, 0xb2, 0x8b, 0xa0, 0x3f, 0x80, 0x00, 0x00, 0xbe, 0xc6, 0x31, 0x35, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x6c, 0x0a, 0xd5, 0x45, 0x3d, 0x27, 0xb6, 0x45, 0x32, 0x8b, 0x1f, 0x41, 0xbf, 0x90, 0x08, 0x77, 0x2e, 0x00, 0x00, 0x82, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0x65, 0x0b, 0x01, 0x10, 0x00, 0x15, 0xc8, 0x20, 0x00, 0x00, 0x00, 0x07, 0x48, 0xf0, 0x3c, 0x00, 0x62, 0x01, 0x48, 0x78, 0x1e, 0x00, 0x62, 0x02, 0x53, 0x78, 0x0f, 0x00, 0x31, 0x00, 0x41, 0x78, 0xe0, 0x78, 0x01, 0xe2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x3e, 0xf0, 0x3c, 0x00, 0x62, 0x70, 0x78, 0x1e, 0x00, 0x62, 0x40, 0x7b, 0xf0, 0x97, 0x68, 0x03, 0x00, 0x00, 0x08, 0x01, 0x00, 0x20, 0x90, 0x6b, 0x03, 0x00, 0x00, 0x04, 0x01, 0x00, 0x10, 0x48, 0x6c, 0x03, 0x00, 0x00, 0x02, 0x01, 0x00, 0x08, 0x24, 0x65, 0x13, 0x00, 0x00, 0x01, 0x01, 0x00, 0x04, 0x11, 0x7e, 0x13, 0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x1d, 0x70, 0x53, 0x00, 0x00, 0x00, 0x21, 0x00, 0x01, 0x04, 0x3f, 0xd3, 0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x82, 0x39, 0x69, 0x01, 0x00, 0x00, 0x10, 0x01, 0x00, 0x41, 0x1d, 0x68, 0x03, 0x00, 0x00, 0x08, 0x01, 0x00, 0x58, 0x29, 0x6b, 0x03, 0x00, 0x00, 0x04, 0x01, 0x00, 0x10, 0x49, 0x6d, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x24, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0xab, 0x7e, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x62, 0x68, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x32, 0x2a, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x12, 0x43, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0xfe, 0xb0, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0xc8, 0xd8, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0xaf, 0x6e, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x55, 0x6a, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x92, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x48, 0x64, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0x2a, 0x27, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x8b, 0x03, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x13, 0xdf, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0x5f, 0x6a, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x48, 0x6b, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x55, 0x6a, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x13, 0x0e, 0x6f, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0xe1, 0x71, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0xb8, 0x75, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x09, 0x21, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x94, 0x33, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x36, 0x30, 0x6e, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x24, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x92, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x49, 0x43, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x12, 0x43, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x09, 0x21, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x04, 0x90, 0x6b, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x48, 0x6b, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x21, 0x46, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x11, 0x46, 0x64, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x06, 0xd8, 0x43, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0xc6, 0x45, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xe3, 0x44, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0xf1, 0xa1, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x78, 0xd0, 0x6a, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x5d, 0x80, 0x6c, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x24, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x92, 0x63, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x49, 0x43, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0xb2, 0x81, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x59, 0x42, 0x68, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0xac, 0xa2, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x56, 0x4f, 0x6c, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x2b, 0x28, 0x6b, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x15, 0x93, 0x73, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x0a, 0xc9, 0x78, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x05, 0x65, 0x0b, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x69, 0x89, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x59, 0x3d, 0x69, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x52, 0x8f, 0x6a, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x68, 0x34, 0x6d, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x34, 0x1a, 0x66, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x15, 0x75, 0x64, 0x13, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x49, 0x43, 0x53, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x24, 0x43, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0x14, 0xb7, 0x69, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x8a, 0x5c, 0x26, 0x78, 0x25, 0xc0, 0x36, 0x13, 0x36, 0xf0, 0x00, 0x4c, 0xf1, 0x2e, 0x01, 0x5b, 0x15, 0x14, 0x83, 0x20, 0x7c, 0x89, 0x70, 0x0d, 0x0b, 0xcd, 0x14, 0x18, 0x26, 0x78, 0x4b, 0x80, 0x6d, 0x09, 0x06, 0x22, 0x6c, 0xc4, 0xb8, 0x06, 0x1b, 0x43, 0x02, 0x7f, 0xe2, 0x5c, 0x03, 0x1b, 0xfe, 0x38, 0x51, 0x3a, 0xfd, 0xbb, 0x74, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfa, 0xe0, 0xb1, 0x75, 0x15, 0x09, 0x07, 0x7e, 0x14, 0xd0, 0x8a, 0x5a, 0x0a, 0x03, 0xfd, 0x60, 0xdc, 0xb8, 0x00, 0x00, 0x4c, 0xf1, 0x30, 0x01, 0x5c, 0x15, 0x3e, 0x80, 0x20, 0x7c, 0x89, 0x80, 0x0d, 0x0c, 0xd4, 0x14, 0x18, 0x26, 0x78, 0x4c, 0x00, 0x6e, 0x10, 0x1d, 0xa0, 0x38, 0x4c, 0xe2, 0x60, 0x03, 0x1c, 0x13, 0x02, 0x26, 0x78, 0x26, 0x00, 0x37, 0x10, 0x03, 0x1e, 0x7f, 0x13, 0x00, 0x1b, 0x3c, 0xf0, 0x00, 0x00, 0x38, 0xae, 0x6a, 0xae, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x38, 0xef, 0xf1, 0x88, 0x41, 0xa8, 0x8e, 0x35, 0x43, 0xa6, 0x1b, 0xdf, 0x41, 0x4d, 0x89, 0xac, 0x70, 0xe5, 0xc0, 0x00, 0x20, 0x7c, 0x89, 0x90, 0x0d, 0x0d, 0xd6, 0x3c, 0x00, 0x26, 0x78, 0x4c, 0x80, 0x6e, 0x15, 0x14, 0xa0, 0x38, 0x4c, 0xe2, 0x64, 0x03, 0x1d, 0x26, 0x17, 0x06, 0x24, 0x7c, 0x13, 0x20, 0x1b, 0x05, 0x26, 0x02, 0x4c, 0xf1, 0x32, 0x01, 0x5d, 0x10, 0x0b, 0x3f, 0x78, 0x99, 0x00, 0xdd, 0x3f, 0x80, 0x00, 0x00, 0x3f, 0x7c, 0xe2, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x1f, 0x44, 0x6d, 0x45, 0x42, 0x58, 0x43, 0x45, 0x2f, 0x3e, 0x06, 0x42, 0x6c, 0x4c, 0x0f, 0x77, 0x2e, 0x00, 0x00, 0x26, 0x78, 0x4d, 0x00, 0x6f, 0x14, 0x36, 0xe0, 0x20, 0x4c, 0xe2, 0x68, 0x03, 0x1e, 0x2a, 0x16, 0x06, 0x24, 0x7c, 0x13, 0x40, 0x1b, 0x16, 0x4d, 0x28, 0x18, 0x4c, 0x78, 0x9a, 0x00, 0xde, 0x08, 0x06, 0x22, 0x7c, 0x89, 0xa0, 0x0d, 0x0e, 0x43, 0x12, 0x7f, 0xc4, 0xd0, 0x06, 0x3e, 0xfc, 0x00, 0x00, 0xa0, 0xfa, 0x1f, 0x45, 0x16, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0xf9, 0x26, 0x51, 0x4c, 0x2a, 0x14, 0xd4, 0x4c, 0x29, 0x79, 0xd8, 0x53, 0x14, 0x94, 0x42, 0x69, 0xb9, 0x70, 0x00, 0x20, 0x4c, 0xe2, 0x6c, 0x03, 0x1f, 0x2b, 0x3e, 0x00, 0x24, 0x7c, 0x13, 0x60, 0x1b, 0x17, 0x54, 0x28, 0x18, 0x4c, 0x78, 0x9b, 0x00, 0xdf, 0x12, 0x1d, 0x41, 0x28, 0x6c, 0xc4, 0xd8, 0x06, 0x1f, 0x26, 0x02, 0x26, 0x78, 0x4d, 0x80, 0x6f, 0x11, 0x13, 0x1e, 0x7b, 0x26, 0xc0, 0x37, 0x3f, 0xe0, 0x00, 0x00, 0x3c, 0xdf, 0xd9, 0x8c, 0x3d, 0x07, 0x54, 0x0d, 0xba, 0x8a, 0xc2, 0x40, 0xbf, 0x62, 0xb5, 0xa7, 0x46, 0x50, 0xdf, 0xa7, 0x45, 0x4c, 0x3a, 0xa6, 0x40, 0x9b, 0x13, 0x59, 0x76, 0xcb, 0x80, 0x00, 0x24, 0x7c, 0x13, 0x80, 0x1c, 0x10, 0x56, 0x78, 0x00, 0x4c, 0x78, 0x9c, 0x00, 0xe0, 0x14, 0x1c, 0x41, 0x28, 0x6c, 0xc4, 0xe0, 0x07, 0x00, 0x4d, 0x15, 0x0c, 0x26, 0x78, 0x27, 0x00, 0x38, 0x08, 0x06, 0x22, 0x4c, 0xe2, 0x70, 0x03, 0x20, 0x21, 0x05, 0x3f, 0xf1, 0x38, 0x01, 0x60, 0x7f, 0x00, 0x00, 0x80, 0x7d, 0xfb, 0x5c, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7e, 0xbc, 0xbc, 0x3c, 0x8a, 0x86, 0x01, 0x16, 0x8a, 0x66, 0x0b, 0x06, 0x84, 0xd8, 0x9a, 0x60, 0xee, 0x5c, 0x00, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x0d, 0x70, 0x11, 0x41, 0x00, 0x21, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0x7f, 0x78, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x01, 0x00, 0x03, 0x61, 0x86, 0x90, 0x00, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x26, 0x4d, 0x00, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x7d, 0x3c, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x0e, 0x38, 0x11, 0x42, 0x00, 0x21, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x5c, 0x24, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x7b, 0x3c, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0xac, 0x3a, 0x4c, 0xe2, 0x78, 0x03, 0xe2, 0xff, 0xff, 0x6f, 0x39, 0x4c, 0xf1, 0x3c, 0x01, 0x62, 0x26, 0x3d, 0x80, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0x79, 0x78, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x7e, 0x00, 0x00, 0x11, 0x5f, 0x22, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0x78, 0x78, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x33, 0xe2, 0x60, 0xcc, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x34, 0x37, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x6b, 0x26, 0x7c, 0x13, 0xc0, 0x1c, 0x0a, 0x76, 0xb7, 0x10, 0x02, 0x01, 0x4c, 0xf1, 0x3c, 0x01, 0x62, 0x15, 0x56, 0x98, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x12, 0x3b, 0x5b, 0x11, 0x01, 0x01, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x01, 0x00, 0x03, 0xeb, 0x5a, 0x40, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x1c, 0x34, 0x5c, 0x22, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x00, 0x00, 0x60, 0x5b, 0x00, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x2a, 0x52, 0x40, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x12, 0x33, 0xd1, 0x3a, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x00, 0x6d, 0x1f, 0x01, 0x00, 0x25, 0x7c, 0x13, 0xc0, 0x1c, 0x0a, 0xce, 0x11, 0x73, 0x24, 0x7c, 0x89, 0xe0, 0x0e, 0x62, 0xd2, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x22, 0x5b, 0x3a, 0x42, 0x00, 0x21, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x5d, 0xb1, 0x10, 0x01, 0x01, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x02, 0x00, 0x40, 0x8d, 0x3d, 0x00, 0x26, 0x78, 0x27, 0x80, 0x38, 0x26, 0x2d, 0x7a, 0x20, 0x01, 0x21, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x2e, 0xd8, 0x14, 0x02, 0x00, 0x27, 0x78, 0x27, 0x80, 0x38, 0x06, 0x00, 0x00, 0x47, 0x3e, 0x00, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x12, 0x50, 0xa1, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x01, 0x36, 0x1f, 0x42, 0x00, 0x21, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0x70, 0x6b, 0x42, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x12, 0x4f, 0x40, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x00, 0x00, 0x64, 0x50, 0x00, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x37, 0x35, 0x3d, 0x26, 0x78, 0x27, 0x80, 0x38, 0x62, 0x2f, 0xe6, 0x2c, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x19, 0xc2, 0x89, 0x10, 0x00, 0x00, 0x21, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x00, 0x1b, 0x0e, 0x3c, 0xc0, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x00, 0x00, 0x20, 0x71, 0x00, 0x00, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x00, 0x00, 0x60, 0x51, 0x78, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x1a, 0x3e, 0x80, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0xce, 0x44, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x10, 0x5d, 0xa6, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x00, 0x00, 0x20, 0x72, 0x00, 0x00, 0x4c, 0xf1, 0x3c, 0x01, 0x62, 0x93, 0x24, 0x7c, 0x89, 0xe0, 0x0e, 0x42, 0xac, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x00, 0x4c, 0x90, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x00, 0x37, 0x0e, 0x3e, 0xc0, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x67, 0x88, 0x88, 0x10, 0x00, 0x00, 0x21, 0x4c, 0xe2, 0x78, 0x03, 0x62, 0x00, 0x00, 0x20, 0x34, 0xf0, 0x00, 0x4c, 0xf1, 0x3c, 0x01, 0x62, 0x02, 0x4b, 0x20, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x02, 0x4a, 0x26, 0x00, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x07, 0x54, 0x15, 0x01, 0x00, 0x25, 0x7c, 0x13, 0xc0, 0x1c, 0x0a, 0x00, 0x00, 0x25, 0x3d, 0x80, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0x09, 0x92, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x07, 0xaa, 0x05, 0x42, 0x00, 0x21, 0x7c, 0x89, 0xe0, 0x0e, 0x62, 0x09, 0x79, 0x4c, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x01, 0x00, 0x20, 0x96, 0x42, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x20, 0x39, 0xcc, 0x2c, 0x6c, 0xc4, 0xf0, 0x07, 0x42, 0x08, 0x00, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x30, 0x58, 0x30, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x54, 0x3e, 0xa0, 0x00, 0x00, 0x26, 0x78, 0x27, 0x80, 0x38, 0x02, 0x08, 0x0e, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x00, 0x00, 0x20, 0x57, 0x84, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x08, 0x0f, 0x26, 0x7c, 0x89, 0xe0, 0x0e, 0x12, 0x00, 0x00, 0x26, 0x38, 0xc0, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0xc7, 0x3d, 0x00, 0x26, 0x78, 0x27, 0x80, 0x38, 0x22, 0x27, 0xe0, 0x20, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0xc3, 0x3d, 0x66, 0x26, 0x78, 0x27, 0x80, 0x38, 0x02, 0x27, 0x3c, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x23, 0x26, 0x7c, 0x13, 0xc0, 0x1c, 0x22, 0x06, 0xf3, 0x0c, 0x4c, 0xf1, 0x3c, 0x01, 0x62, 0x31, 0x46, 0xa0, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x12, 0x3b, 0xc0, 0x10, 0x01, 0x01, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x08, 0x06, 0x22, 0x7c, 0x89, 0xe0, 0x0e, 0x32, 0x9e, 0x20, 0x6e, 0x06, 0x00, 0x00, 0x7f, 0x23, 0x7c, 0x89, 0xe0, 0x0e, 0x02, 0xc5, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x0e, 0x38, 0x91, 0x7b, 0x22, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0x62, 0x53, 0xe0, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x0a, 0x77, 0x80, 0x10, 0x02, 0x01, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x00, 0x00, 0x20, 0x5b, 0x80, 0x00, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x30, 0x4c, 0x90, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x42, 0x03, 0x00, 0x00, 0x00, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x02, 0x08, 0x26, 0x3e, 0x39, 0x00, 0x26, 0x78, 0x27, 0x80, 0x38, 0x06, 0x00, 0x00, 0x4e, 0x42, 0x00, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x32, 0x43, 0xa4, 0x40, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x10, 0x1b, 0x26, 0x78, 0x4f, 0x00, 0x71, 0xfe, 0xff, 0x3f, 0x42, 0x00, 0x21, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x22, 0x00, 0x00, 0x04, 0xb0, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x02, 0x00, 0x03, 0x5e, 0x43, 0x48, 0x00, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0xfe, 0xff, 0x3f, 0x41, 0x00, 0x21, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0xcf, 0x10, 0x6c, 0x0a, 0x00, 0x00, 0x07, 0x27, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x81, 0x3c, 0x00, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x08, 0x01, 0x00, 0x00, 0x3e, 0x28, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x00, 0x89, 0x0e, 0x3c, 0x80, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x00, 0x00, 0x17, 0x5f, 0xd2, 0x20, 0x4e, 0xe2, 0x78, 0x03, 0xe2, 0xff, 0xff, 0xff, 0x3f, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x42, 0x26, 0xd4, 0x60, 0x27, 0x00, 0xf0, 0xff, 0xff, 0xff, 0x0f, 0x00, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x08, 0xff, 0xff, 0xff, 0xff, 0x00, 0x02, 0x3f, 0xf1, 0x3c, 0x01, 0x62, 0x7f, 0x6e, 0x14, 0x3d, 0x7a, 0xe6, 0xaa, 0x77, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7e, 0xff, 0x18, 0x41, 0x8a, 0x88, 0xf8, 0x00, 0x8a, 0x61, 0x98, 0x00, 0x84, 0xd8, 0x9a, 0x67, 0xee, 0x5c, 0x00, 0x00, 0xa6, 0x78, 0x9e, 0x00, 0xe2, 0x00, 0x20, 0x6c, 0xc4, 0xf8, 0x07, 0x03, 0x9d, 0x41, 0x00, 0x26, 0x78, 0x27, 0xc0, 0x38, 0x23, 0x39, 0xf0, 0x00, 0x4c, 0xf1, 0x3e, 0x01, 0x63, 0x45, 0x27, 0x7c, 0x89, 0xf0, 0x0e, 0x43, 0x15, 0x22, 0x7c, 0x89, 0xf0, 0x0e, 0x13, 0x00, 0x00, 0x62, 0x4b, 0x00, 0x20, 0x6c, 0xc4, 0xf8, 0x07, 0x43, 0x13, 0x00, 0x00, 0x01, 0x90, 0x26, 0x78, 0x4f, 0x80, 0x71, 0x03, 0x00, 0x40, 0x8d, 0x3d, 0x00, 0x26, 0x78, 0x27, 0xc0, 0x38, 0x43, 0x12, 0x00, 0x00, 0x0c, 0x30, 0x4c, 0xe2, 0x7c, 0x03, 0x63, 0x00, 0x00, 0x20, 0x34, 0xf0, 0x00, 0x4c, 0xf1, 0x3e, 0x01, 0xe3, 0x00, 0x00, 0x20, 0x55, 0x78, 0x00, 0x4c, 0x78, 0x9f, 0x00, 0xe3, 0x01, 0x00, 0x20, 0x96, 0x42, 0x00, 0x26, 0x78, 0x4f, 0x80, 0x71, 0x61, 0x39, 0xcc, 0x2c, 0x6c, 0xc4, 0xf8, 0x07, 0x23, 0x00, 0x00, 0x24, 0x57, 0x10, 0x20, 0x4c, 0xe2, 0x7c, 0x03, 0x23, 0xc3, 0x3d, 0x66, 0x26, 0x78, 0x27, 0xc0, 0x38, 0x07, 0x00, 0x00, 0x4c, 0x3e, 0x00, 0x24, 0x7c, 0x13, 0xe0, 0x1c, 0x0b, 0x77, 0x80, 0x10, 0x01, 0x01, 0x4c, 0xf1, 0x3e, 0x01, 0x63, 0x21, 0x3e, 0x33, 0x24, 0x7c, 0x13, 0xe0, 0x1c, 0x43, 0xe5, 0xb4, 0xd2, 0x94, 0x1f, 0x4c, 0xf1, 0x3e, 0x01, 0x63, 0x49, 0x00, 0x00, 0x00, 0x00, 0x25, 0x7c, 0x13, 0xe0, 0x1c, 0x23, 0x04, 0xf3, 0x0c, 0x4c, 0xf1, 0x3e, 0x01, 0xe3, 0x00, 0x00, 0x20, 0x5b, 0x80, 0x00, 0x4c, 0x78, 0x9f, 0x00, 0xe3, 0x01, 0x00, 0x20, 0x9c, 0x40, 0x00, 0x26, 0x78, 0x4f, 0x80, 0x71, 0x21, 0x32, 0xcc, 0x3c, 0x7a, 0xc4, 0xf8, 0x07, 0x43, 0x28, 0x40, 0xe2, 0x7c, 0x03, 0x63, 0xe2, 0x78, 0x03, 0x22, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x21, 0x71, 0x89, 0xf0, 0x0e, 0x03, 0x00, 0x01, 0x02, 0x25, 0x6c, 0xc5, 0x00, 0x07, 0x44, 0x15, 0x22, 0x6c, 0xc5, 0x00, 0x07, 0x04, 0x52, 0x57, 0x20, 0x26, 0x78, 0x28, 0x00, 0x39, 0x48, 0x85, 0x42, 0x6e, 0x69, 0x35, 0x4c, 0xe2, 0x80, 0x03, 0x24, 0x90, 0x01, 0x00, 0x00, 0x00, 0x3d, 0x7a, 0x28, 0x00, 0x39, 0x50, 0x20, 0x78, 0x14, 0x00, 0x1c, 0x7c, 0x13, 0xc0, 0x1c, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x20, 0x79, 0x50, 0x00, 0x72, 0x00, 0x00, 0x08, 0xac, 0x26, 0x78, 0x37, 0x40, 0x46, 0x10, 0x36, 0xf0, 0x00, 0x4c, 0xf1, 0xba, 0x02, 0x18, 0x15, 0x14, 0x83, 0x20, 0x7c, 0x8d, 0xd0, 0x11, 0x08, 0xcd, 0x14, 0x18, 0x26, 0x78, 0x6e, 0x80, 0x8c, 0x08, 0x06, 0x22, 0x6c, 0xc6, 0xe8, 0x08, 0x18, 0x43, 0x02, 0x7f, 0xe3, 0x74, 0x04, 0x18, 0xfe, 0x00, 0x00, 0x80, 0xf0, 0xca, 0x34, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfd, 0xff, 0xf0, 0x5c, 0x15, 0x0d, 0x78, 0x75, 0x14, 0x8a, 0xa9, 0x05, 0xfe, 0x19, 0xdf, 0x70, 0xdc, 0xb8, 0x00, 0x00, 0x4c, 0xf1, 0xbc, 0x02, 0x19, 0x15, 0x3e, 0x80, 0x20, 0x7c, 0x8d, 0xe0, 0x11, 0x09, 0xd4, 0x14, 0x18, 0x26, 0x78, 0x6f, 0x00, 0x8c, 0x11, 0x1d, 0xa0, 0x38, 0x4c, 0xe3, 0x78, 0x04, 0x19, 0x13, 0x02, 0x26, 0x78, 0x37, 0x80, 0x46, 0x11, 0x03, 0x1e, 0x7f, 0x1b, 0xc0, 0x23, 0x39, 0xf0, 0x00, 0x00, 0x38, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xa8, 0x17, 0xf6, 0x46, 0xa4, 0x56, 0x48, 0x3f, 0xda, 0x92, 0x00, 0x70, 0xe5, 0xc0, 0x00, 0x20, 0x72, 0x89, 0xe0, 0x0e, 0x02, 0x00, 0x01, 0x27, 0x41, 0x54, 0x47, 0xc0, 0x40, 0x53, 0x0c, 0xc0, 0x40, 0x26, 0xc4, 0xd6, 0x77, 0x72, 0xe0, 0x00, 0x10, 0x01, 0x01, 0x30, 0xc3, 0x3e, 0xe0, 0x00, 0x00, 0x84, 0xcc, 0x1b, 0xf4, 0xba, 0x13, 0x01, 0x00, 0x78, 0x31, 0x21, 0x72, 0x7b, 0xf0, 0x00, 0x03, 0x00, 0x01, 0x76, 0x4e, 0x53, 0x04, 0xd6, 0x48, 0x53, 0x60, 0x4e, 0x41, 0x20, 0x46, 0x5d, 0x7c, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0xc4, 0x40, 0xd5, 0xe7, 0x14, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x77, 0xc5, 0x00, 0x09, 0x00, 0x01, 0xfd, 0x60, 0x45, 0x39, 0xa9, 0xe8, 0x45, 0x2e, 0x5e, 0xa3, 0x41, 0xbf, 0x90, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3b, 0xa0, 0xc4, 0x9b, 0xaf, 0x20, 0x00, 0x0c, 0x57, 0x72, 0x01, 0x7d, 0x40, 0x05, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x7c, 0x60, 0x00, 0x0a, 0x00, 0x32, 0x36, 0x41, 0x53, 0x1f, 0x4a, 0x4a, 0x53, 0x1d, 0x7f, 0x43, 0x1b, 0xf3, 0xae, 0x7f, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0x44, 0x2c, 0xf7, 0xec, 0x16, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x77, 0xc8, 0x00, 0x0c, 0x00, 0x00, 0x17, 0x6e, 0x45, 0x32, 0x90, 0xea, 0x45, 0x36, 0x14, 0x56, 0x42, 0x04, 0x9e, 0x20, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0xc4, 0x84, 0x0d, 0x5e, 0x3c, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x7d, 0x00, 0x01, 0x04, 0x00, 0x01, 0x22, 0x44, 0x53, 0xc1, 0xfb, 0x4c, 0x53, 0x27, 0xc7, 0x47, 0x1b, 0xed, 0xfa, 0x7a, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0x9c, 0x67, 0x25, 0xe9, 0x17, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x77, 0xe0, 0x00, 0x24, 0x00, 0x02, 0x27, 0xbe, 0x45, 0x34, 0x48, 0x9e, 0x45, 0x2e, 0xf4, 0xa7, 0x41, 0xbf, 0x90, 0x08, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0x44, 0xa5, 0x56, 0x78, 0x27, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x7e, 0x30, 0x02, 0x07, 0x00, 0x01, 0x77, 0x42, 0x53, 0x1f, 0x17, 0x4f, 0x53, 0x6d, 0xc5, 0x45, 0x1c, 0x26, 0x6d, 0x7a, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x18, 0xb6, 0x2e, 0xfe, 0x00, 0x00, 0x80, 0x90, 0xec, 0x15, 0x55, 0x3d, 0x13, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x77, 0xe4, 0x00, 0x28, 0x00, 0x00, 0x17, 0x72, 0x45, 0x32, 0xd2, 0xc2, 0x45, 0x37, 0x71, 0x29, 0x41, 0xc0, 0x2e, 0x70, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x01, 0x8b, 0x67, 0x3e, 0xe0, 0x00, 0x00, 0xa0, 0xc4, 0xd1, 0x55, 0x53, 0x6b, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x7f, 0x40, 0x03, 0x08, 0x00, 0x25, 0x0c, 0x4c, 0x53, 0x9c, 0x1b, 0x46, 0x53, 0x35, 0x86, 0x49, 0x1b, 0xf7, 0x47, 0x74, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0x5c, 0xfa, 0x00, 0x6f, 0x10, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x77, 0xf5, 0x00, 0x39, 0x00, 0x01, 0xb1, 0x86, 0x45, 0x3a, 0x39, 0x53, 0x45, 0x33, 0x3f, 0xde, 0x41, 0xc0, 0x00, 0x72, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0x44, 0x98, 0x23, 0xb0, 0x59, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x80, 0x00, 0x04, 0x04, 0x00, 0x22, 0x8c, 0x44, 0x53, 0xce, 0x01, 0x45, 0x52, 0xda, 0xde, 0x49, 0x1b, 0xf9, 0x00, 0x78, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0xac, 0x1a, 0x05, 0xdb, 0x15, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x78, 0xb0, 0x00, 0xf4, 0x00, 0x03, 0x2a, 0x7b, 0x45, 0x32, 0x84, 0x14, 0x45, 0x1f, 0x3b, 0xc9, 0x3e, 0xff, 0xe8, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0xc4, 0x56, 0xe2, 0x97, 0x3d, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x8b, 0x20, 0x0f, 0x06, 0x00, 0x32, 0xa7, 0x4b, 0x53, 0x39, 0x19, 0x44, 0x51, 0xf7, 0x1f, 0x3a, 0xef, 0xfe, 0x30, 0x70, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0xac, 0x6e, 0x29, 0x77, 0x15, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x78, 0xb5, 0x00, 0xf9, 0x00, 0x01, 0x4a, 0x3e, 0x45, 0x3b, 0x12, 0x76, 0x45, 0x22, 0x13, 0x88, 0x3f, 0x08, 0xda, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0x44, 0x5d, 0x22, 0x62, 0x0b, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x8b, 0x60, 0x0f, 0x0a, 0x00, 0x14, 0xa4, 0x40, 0x53, 0x54, 0x51, 0x49, 0x52, 0x0e, 0x66, 0x34, 0xef, 0xfe, 0x40, 0x70, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0x90, 0x2c, 0xd2, 0x26, 0x21, 0x14, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x78, 0xbe, 0x01, 0x02, 0x00, 0x01, 0xb1, 0x86, 0x45, 0x3b, 0xf3, 0x2a, 0x45, 0x29, 0x8d, 0xaa, 0x41, 0xbe, 0x1f, 0x0c, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0x44, 0x98, 0x23, 0xb0, 0x59, 0x01, 0x00, 0x78, 0x31, 0x43, 0xd8, 0x40, 0x00, 0x20, 0x72, 0x8c, 0x40, 0x10, 0x08, 0x00, 0x2a, 0xea, 0x44, 0x53, 0xa6, 0xb2, 0x4a, 0x52, 0x28, 0x76, 0x30, 0xef, 0xfe, 0x40, 0x70, 0x72, 0xe0, 0x00, 0x00, 0x00, 0x02, 0x6f, 0x2b, 0xfe, 0x00, 0x00, 0x80, 0xb0, 0xdc, 0x9d, 0xf4, 0x89, 0x15, 0x00, 0x07, 0x83, 0x63, 0x0d, 0x84, 0x00, 0x00, 0x42, 0x78, 0xdf, 0x01, 0x1a, 0x00, 0x02, 0x55, 0xbb, 0x45, 0x43, 0xb5, 0x68, 0x45, 0x22, 0x55, 0x0d, 0x3f, 0x6e, 0x08, 0x00, 0x77, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x26, 0xf5, 0x3f, 0xe0, 0x00, 0x00, 0xa0, 0x44, 0x15, 0xf2, 0xca, 0x44, 0x01, 0x00, 0x78, 0x31, 0x21, 0x73, 0x88, 0x50, 0x0c, 0x29, 0x63, 0xc4, 0x38, 0x06, 0x2b, 0x43, 0xdf, 0x10, 0x00, 0x08, 0x43, 0xef, 0x8e, 0x00, 0x0b, 0x43, 0x77, 0xcd, 0x00, 0x11, 0x21, 0x77, 0xf2, 0x80, 0x14, 0x21, 0x77, 0xfa, 0x80, 0x0b, 0x22, 0x73, 0xfd, 0xc0, 0x06, 0x22, 0x73, 0x81, 0x20, 0x05, 0x26, 0x63, 0xc0, 0xa0, 0x02, 0x38, 0x43, 0xe2, 0xe0, 0x03, 0x3c, 0x43, 0xf1, 0x7e, 0x02, 0x03, 0x43, 0x78, 0xc0, 0x01, 0x04, 0x21, 0x79, 0x60, 0x80, 0x82, 0x21, 0x7b, 0x30, 0xc0, 0x41, 0x23, 0x7b, 0x1b, 0x00, 0x22, 0x23, 0x73, 0x8d, 0x90, 0x11, 0x24, 0x63, 0xc6, 0xd0, 0x08, 0x35, 0x43, 0xe3, 0x6c, 0x04, 0x16, 0x43, 0xf1, 0xb8, 0x02, 0x17, 0x89, 0x00, 0x00, 0x00, 0x77 };
-            connection.Send(hardcoded1);
-
-            var hardcoded2 = new byte[] { 0x00, 0x00, 0x00, 0x12, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x14, 0x5b, 0xa6, 0x40, 0x09, 0x00, 0x00, 0x01, 0x7d };
-            connection.Send(hardcoded2);
-        }
-
-        // send toon stuff - else toon will not appear
-        private static void SendToonApperanceData(IConnection connection, GamePacket packet)
-        {
-            var hardcoded1 = new byte[] { 0x00, 0x00, 0x00, 0xbd, 0x4e, 0xf3, 0xff, 0xff, 0xff, 0x0f, 0x48, 0xad, 0xff, 0xff, 0xff, 0x7f, 0x40, 0x9d, 0xfd, 0xff, 0xff, 0xff, 0x03, 0x26, 0x78, 0x27, 0x80, 0x38, 0xfe, 0xff, 0x7f, 0xad, 0x01, 0x00, 0x03, 0xe4, 0x27, 0x78, 0x27, 0x80, 0x38, 0x26, 0x19, 0x3e, 0xe6, 0x26, 0x7c, 0x13, 0xc0, 0x1c, 0x3a, 0x3c, 0x40, 0x73, 0x20, 0x7c, 0x89, 0xe0, 0x0e, 0x22, 0x57, 0x26, 0x78, 0x4f, 0x00, 0x71, 0x34, 0x26, 0x4c, 0xe2, 0x78, 0x03, 0x22, 0xe9, 0x24, 0x7c, 0x13, 0xc0, 0x1c, 0x2a, 0x0c, 0xbe, 0x6e, 0x02, 0x00, 0x00, 0x30, 0x25, 0x7c, 0x13, 0xc0, 0x1c, 0x92, 0x0c, 0x4c, 0x78, 0x9e, 0x00, 0xe2, 0x4a, 0x24, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0xcf, 0x10, 0x8c, 0x00, 0x00, 0x00, 0x20, 0x6c, 0xc4, 0xf0, 0x07, 0x22, 0x83, 0x2f, 0x6e, 0x0e, 0x00, 0x00, 0x7c, 0x29, 0x6c, 0xc4, 0xf0, 0x07, 0x02, 0x46, 0x26, 0x78, 0x27, 0x80, 0x38, 0x36, 0x78, 0x40, 0xdf, 0x00, 0x00, 0x00, 0x00, 0x26, 0x78, 0x27, 0x80, 0x38, 0x12, 0x05, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x20, 0xcb, 0x8e, 0x30, 0x00, 0x00, 0x01, 0x4c, 0xf1, 0x3c, 0x01, 0xe2, 0x33, 0xc4, 0x60, 0x3a, 0x00, 0x00, 0x00, 0x40, 0x26, 0xf1, 0x3c, 0x01, 0x62, 0x01, 0x40, 0x09, 0x00, 0x00, 0x0c, 0x81 };
-            connection.Send(hardcoded1);
-
-            //            var hardcoded2 = new byte[] { 0x00, 0x00, 0x00, 0x36, 0x21, 0x78, 0x4f, 0x00, 0x71, 0x00, 0x00, 0x09, 0x38, 0x45, 0xa2, 0x3e, 0x00, 0x44, 0x98, 0x66, 0x00, 0x42, 0x36, 0x26, 0xb3, 0x77, 0x97, 0x00, 0x00, 0x06, 0x00, 0x09, 0x86, 0x46, 0x7f, 0x00, 0x00, 0x00, 0x91, 0x88, 0xdf, 0xa5, 0xd1, 0x23, 0x00, 0x03, 0xc1, 0x23, 0x44, 0x01, 0x00, 0x00, 0x68, 0xe9 };
-            var hardcoded2 = new byte[] { 0x00, 0x00, 0x00, 0x36, 0x21, 0x78, 0x56, 0x00, 0x78, 0x00, 0x00, 0x06, 0x72, 0x45, 0xa2, 0x3e,
-                                        0x00, 0x44, 0x98, 0x66, 0x00, 0x42, 0x36, 0x26, 0xb3, 0x77, 0x97, 0x00, 0x00, 0x06, 0x00, 0x09,
-                                        0x86, 0x46, 0x7f, 0x00, 0x00, 0x00, 0x91, 0xb8, 0x42, 0x58, 0x40, 0x20, 0x00, 0x03, 0xc1, 0x23,
-                                        0x44, 0x01, 0x00, 0x00, 0x69, 0x26 };
-            connection.Send(hardcoded2);
-
-            var hardcoded3 = new byte[] { 0x00, 0x00, 0x01, 0xdd, 0x21, 0x78, 0x56, 0x00, 0x78, 0x00, 0x00, 0x06, 0x72, 0x45, 0xa2, 0x3e,
-                                        0x00, 0x44, 0x98, 0x66, 0x00, 0x42, 0x36, 0x26, 0xb3, 0x77, 0x97, 0x00, 0x00, 0x06, 0x00, 0x09,
-                                        0x86, 0x46, 0x7f, 0x00, 0x00, 0x00, 0x91, 0xb8, 0x42, 0x58, 0x40, 0x20, 0x00, 0x03, 0xc1, 0x23,
-                                        0x21, 0x76, 0xe8, 0x00, 0x0a, 0x00, 0x00, 0x09, 0x12, 0x44, 0x9e, 0x0f, 0xde, 0x44, 0x99, 0x3e,
-                                        0x3b, 0x41, 0xdf, 0x6f, 0xd5, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00,
-                                        0x00, 0xc0, 0x84, 0x9b, 0x39, 0x2f, 0x4f, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20,
-                                        0x62, 0xbf, 0x00, 0x01, 0x04, 0x00, 0x11, 0x3d, 0x5e, 0x29, 0xa2, 0x44, 0x5e, 0x29, 0x77, 0xa5,
-                                        0x47, 0x0d, 0xfc, 0x80, 0x68, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00,
-                                        0x80, 0x90, 0x58, 0x2a, 0xb3, 0xc2, 0x27, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21,
-                                        0x78, 0x00, 0x00, 0x22, 0x00, 0x01, 0x14, 0x62, 0x44, 0x9e, 0x70, 0x0a, 0x45, 0x96, 0xd6, 0xf4,
-                                        0x41, 0xdf, 0xc8, 0x04, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00,
-                                        0xc0, 0x84, 0xa8, 0xd0, 0x2e, 0xdd, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20, 0x62,
-                                        0xc6, 0x00, 0x08, 0x04, 0x00, 0x19, 0x53, 0x5b, 0x29, 0x94, 0x20, 0x54, 0x28, 0xf9, 0xde, 0x29,
-                                        0xf7, 0xff, 0x40, 0x60, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00, 0x80,
-                                        0x90, 0xa8, 0xb7, 0x14, 0xbb, 0x2d, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21, 0x78,
-                                        0x61, 0x00, 0x83, 0x00, 0x01, 0x95, 0x3d, 0x45, 0x99, 0xc8, 0xca, 0x44, 0x8f, 0xb8, 0xfd, 0x3e,
-                                        0x7f, 0xf1, 0x80, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00, 0xc0,
-                                        0x84, 0xab, 0x71, 0x4b, 0xbd, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20, 0x62, 0xc6,
-                                        0x28, 0x08, 0x09, 0x00, 0x0a, 0x51, 0x5e, 0x29, 0xd8, 0x93, 0x56, 0x29, 0x10, 0x9c, 0x28, 0xf8,
-                                        0x46, 0xd0, 0x60, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00, 0x80, 0x90,
-                                        0x28, 0xe9, 0x13, 0x10, 0x2b, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21, 0x78, 0x63,
-                                        0x00, 0x85, 0x00, 0x00, 0xa5, 0x20, 0x44, 0x9a, 0xa2, 0x8c, 0x45, 0x90, 0x73, 0x32, 0x3e, 0x7f,
-                                        0xf2, 0x00, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00, 0xc0, 0x84,
-                                        0x2e, 0x91, 0x31, 0x0c, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20, 0x62, 0xc6, 0xa0,
-                                        0x08, 0x18, 0x00, 0x15, 0x75, 0x44, 0x29, 0xd3, 0x59, 0x4a, 0x29, 0x14, 0x3b, 0x20, 0xf7, 0xff,
-                                        0x20, 0x60, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00, 0x80, 0xb0, 0xd8,
-                                        0xce, 0xfa, 0x44, 0x2d, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21, 0x78, 0x77, 0x80,
-                                        0x95, 0x00, 0x01, 0x2a, 0xdd, 0x45, 0xa1, 0xda, 0xb4, 0x44, 0x91, 0x2a, 0x86, 0x3f, 0xb7, 0x04,
-                                        0x00, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00, 0xc0, 0x84, 0x0a,
-                                        0xf9, 0x65, 0x44, 0x02, 0x00, 0x3c, 0x18, 0x43, 0x09, 0x00, 0x00, 0x09, 0x6c };
-            connection.Send(hardcoded3);
-
-            var hardcoded4 = new byte[] { 0x00, 0x00, 0x01, 0x4f, 0x21, 0x78, 0x56, 0x00, 0x78, 0x00, 0x00, 0x06, 0x72, 0x45, 0xa2, 0x3e,
-                                        0x00, 0x44, 0x98, 0x66, 0x00, 0x42, 0x36, 0x26, 0xb3, 0x77, 0x97, 0x00, 0x00, 0x06, 0x00, 0x09,
-                                        0x86, 0x46, 0x7f, 0x00, 0x00, 0x00, 0x91, 0xb8, 0x42, 0x58, 0x40, 0x20, 0x00, 0x03, 0xc1, 0x23,
-                                        0x21, 0x76, 0xe8, 0x00, 0x0a, 0x00, 0x00, 0x09, 0x12, 0x44, 0x9e, 0x0f, 0xde, 0x44, 0x99, 0x3e,
-                                        0x3b, 0x41, 0xdf, 0x6f, 0xd5, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00,
-                                        0x00, 0xc0, 0x84, 0x9b, 0x39, 0x2f, 0x4f, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20,
-                                        0x62, 0xbf, 0x00, 0x01, 0x04, 0x00, 0x11, 0x3d, 0x5e, 0x29, 0xa2, 0x44, 0x5e, 0x29, 0x77, 0xa5,
-                                        0x47, 0x0d, 0xfc, 0x80, 0x68, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00,
-                                        0x80, 0x90, 0x58, 0x2a, 0xb3, 0xc2, 0x27, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21,
-                                        0x78, 0x00, 0x00, 0x22, 0x00, 0x01, 0x14, 0x62, 0x44, 0x9e, 0x70, 0x0a, 0x45, 0x96, 0xd6, 0xf4,
-                                        0x41, 0xdf, 0xc8, 0x04, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00,
-                                        0xc0, 0x84, 0xa8, 0xd0, 0x2e, 0xdd, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20, 0x62,
-                                        0xc6, 0x00, 0x08, 0x04, 0x00, 0x19, 0x53, 0x5b, 0x29, 0x94, 0x20, 0x54, 0x28, 0xf9, 0xde, 0x29,
-                                        0xf7, 0xff, 0x40, 0x60, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00, 0x80,
-                                        0x90, 0xa8, 0xb7, 0x14, 0xbb, 0x2d, 0x00, 0x03, 0xc1, 0x63, 0x86, 0xc2, 0x00, 0x00, 0x21, 0x78,
-                                        0x6a, 0x00, 0x8c, 0x00, 0x01, 0x57, 0x52, 0x44, 0x9d, 0x35, 0x95, 0x44, 0x91, 0x43, 0xb0, 0x3e,
-                                        0x7f, 0xf2, 0x00, 0x76, 0x97, 0x00, 0x00, 0x00, 0x00, 0x13, 0x7a, 0x3f, 0xf0, 0x00, 0x00, 0xc0,
-                                        0x8c, 0xdc, 0xef, 0xa4, 0x4d, 0x02, 0x00, 0x3c, 0x18, 0x47, 0x6c, 0x20, 0x00, 0x20, 0x62, 0xc7,
-                                        0x78, 0x09, 0x0a, 0x00, 0x12, 0xad, 0x5b, 0x2a, 0x1d, 0xab, 0x48, 0x29, 0x12, 0xa8, 0x2d, 0xfb,
-                                        0x70, 0x40, 0x60, 0xb9, 0x70, 0x00, 0x00, 0x00, 0x01, 0x37, 0x6b, 0x7f, 0x00, 0x00, 0x80, 0x90,
-                                        0x08, 0xaf, 0x96, 0x54, 0x24, 0x00, 0x03, 0xc1, 0x23, 0x44, 0x01, 0x00, 0x00, 0xc3, 0x44 };
-            connection.Send(hardcoded4);
-
-        }
-        private static void StartLogout(IConnection connection, GamePacket packet)
-        {
-            //Allows the 10 second timer to pop up in client, but need to close connection after the 10 seconds
-            //if the client doesn't send a CancelLogout (0x14) packet beforehand.
-            var hardcoded1 = new byte[] { 0x00, 0x00, 0x00, 0x13, 0x13, 0x01, 0x00, 0x00, 0x96, 0x00, 0x00, 0x00, 0x96, 0x44, 0x01, 0x00, 0x01, 0xf3, 0x25 };
-            connection.Send(hardcoded1);
-            Logger.Trace("StartLogout()");
-        }
-
-        private static void CancelLogout(IConnection connection, GamePacket packet)
-        {
-            Logger.Trace("CancelLogout()");
-        }
-
-        private static void SendInventoryUpdate(IConnection connection, GamePacket packet)
-        {
-            //opCode 0x1D
-            Logger.Trace("SendInventoryUpdate()");
-            //var hardcoded1 = new byte[] { 0x00, 0x00, 0x06, 0xaa, 0x1d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x01, 0xde, 0xc7, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x07, 0xe2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x01, 0xde, 0xc7, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x04, 0xa1, 0xe1, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x88, 0x89, 0x5b, 0xd4, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc3, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x4c, 0x68, 0x00, 0x00, 0x00, 0x00, 0xf1, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xcf, 0xff, 0xff, 0xff, 0x3f, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfc, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0xea, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x21, 0x28, 0x07, 0x00, 0x21, 0x68, 0x02, 0x00, 0x2b, 0x3e, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x86, 0x01, 0x00, 0x1f, 0x8b, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0f, 0x00, 0x11, 0x5e, 0x0e, 0x00, 0x00, 0x01, 0x0e, 0x00, 0x26, 0xb1, 0x07, 0x00, 0x26, 0xb1, 0x08, 0x00, 0x26, 0xb2, 0x03, 0x00, 0x26, 0xb1, 0x0e, 0x00, 0x26, 0xb1, 0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-            //connection.Send(hardcoded1);
         }
     }
 }

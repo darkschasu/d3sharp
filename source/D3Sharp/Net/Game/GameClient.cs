@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using D3Sharp.Utils.Extensions;
 using Gibbed.Helpers;
+using D3Sharp.Net.Game.Packets;
 
 //using Gibbed.Helpers;
 
