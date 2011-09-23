@@ -141,6 +141,7 @@
     <Compile Include="Utils\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Net\BNet\Packets\BNetRouter.cs" />
     <Compile Include="Utils\Helpers\StringHashHelper.cs" />
+    <Compile Include="Utils\IMessageExtensions.cs" />
     <Compile Include="Utils\TinyLogger.cs" />
     <Compile Include="Utils\win32\NativeMethods.cs" />
     <Compile Include="Core\Objects\RPCObjectManager.cs" />

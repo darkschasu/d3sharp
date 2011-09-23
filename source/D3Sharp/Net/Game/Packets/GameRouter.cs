@@ -19,9 +19,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using D3Sharp.Utils;
 using D3Sharp.Utils.Extensions;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace D3Sharp.Net.Game.Packets
 {
@@ -509,8 +511,16 @@ namespace D3Sharp.Net.Game.Packets
             if (gameMessages == null)
             {
                 gameMessages = new Dictionary<Type, Action<GameMessage, GameBitBuffer, IConnection>>();
-                gameMessages.Add(typeof(JoinBNetGameMessage), JoinBNetGameMessage);
-                gameMessages.Add(typeof(SimpleMessage), SimpleMessage);
+                var actionInfos = typeof(GameRouter).GetMethods().Where(o => o.GetParameters().Where(a => a.ParameterType == typeof(GameMessage)).Count() == 1 && 
+                        o.GetParameters().Where(a => a.ParameterType == typeof(IConnection)).Count() == 1 &&
+                        o.GetParameters().Where(a => a.ParameterType == typeof(GameBitBuffer)).Count() == 1
+                    ).ToList();
+                foreach (var actionInfo in actionInfos)
+                {
+                    Action<GameMessage, GameBitBuffer, IConnection> action = (Action<GameMessage, GameBitBuffer, IConnection>)Delegate.CreateDelegate(typeof(Action<GameMessage, GameBitBuffer, IConnection>), actionInfo);
+                    Type typ = Type.GetType("D3Sharp.Net.Game.Packets." + actionInfo.Name);
+                    gameMessages.Add(typ, action);
+                }
             }
             //
 
